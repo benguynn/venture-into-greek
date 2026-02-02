@@ -7,42 +7,55 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="ambient-bg"></div> <div id="app-container">
-        <div id="screen-login" class="parchment">
-            <h1 class="ink-title">CODEX</h1>
-            <input type="password" id="pass" placeholder="VIG">
-            <button class="btn-minimal" onclick="enter()">ENTER</button>
-        </div>
+    <div id="ambient-bg"></div>
 
-        <div id="screen-game" class="parchment" style="display:none">
-            <div id="character-zone">
-                <div id="char-sprite"></div>
-                <div id="chat-bubble" class="ink-bubble"></div>
+    <div id="screen-intro" class="overlay-full">
+        <div class="intro-text">The words are fading...<br>Restore the original ink.</div>
+    </div>
+
+    <div id="screen-title" class="screen" style="display:none">
+        <h1 class="codex-logo">THE CODEX</h1>
+        <div class="menu-phi">
+            <div class="menu-main">
+                <button onclick="showScreen('screen-map')">THE JOURNEY (MAP)</button>
+                <button onclick="showScreen('screen-sidequest')">SIDE QUESTS</button>
             </div>
-
-            <div id="word-vault">
-                <div id="greek-main" class="ink-main"></div>
-                <div id="speaker-seal" onclick="speakCurrent()"></div> </div>
-
-            <div id="interaction-grid"></div>
-        </div>
-
-        <div id="screen-summary" class="parchment" style="display:none">
-            <h2 id="summary-title">ACT SEALED</h2>
-            <div class="visual-progress">
-                <p>CHAPTER MASTERY</p>
-                <div class="progress-ring-container">
-                    <svg viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="45" class="ring-bg"></circle>
-                        <circle cx="50" cy="50" r="45" id="progress-ring" class="ring-fill"></circle>
-                    </svg>
-                    <div id="pct-label">0%</div>
-                </div>
+            <div class="menu-side">
+                <button onclick="showScreen('screen-prefs')">PREFS</button>
+                <button onclick="showScreen('screen-donate')">GIVE</button>
+                <button onclick="showScreen('screen-about')">ABOUT</button>
             </div>
-            <div id="summary-intel"></div>
-            <button class="btn-minimal" onclick="resume()">PROCEED</button>
         </div>
     </div>
+
+    <div id="screen-map" class="screen" style="display:none">
+        <button class="btn-back" onclick="showScreen('screen-title')">← BACK</button>
+        <h2 class="section-title">THE 36 SCROLLS</h2>
+        <div id="chapter-grid"></div>
+    </div>
+
+    <div id="screen-game" class="screen" style="display:none">
+        <div class="game-phi-layout">
+            <div class="stage-primary">
+                <div id="greek-display" class="ink-massive"></div>
+                <div id="interaction-grid"></div>
+            </div>
+            <div class="stage-support">
+                <div id="char-sprite">🦖</div>
+                <div id="intel-bubble" class="phi-bubble"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-donate" class="screen" style="display:none">
+        <button class="btn-back" onclick="showScreen('screen-title')">← BACK</button>
+        <div class="card-phi">
+            <h2>SUPPORT THE ARCHIVE</h2>
+            <p>Every dollar funds the creation of the Greek, Hebrew, and Latin modules. Help us preserve the original skin of the Word.</p>
+            <div class="qr-vault">(( QR CODE ))</div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
