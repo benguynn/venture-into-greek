@@ -1,51 +1,36 @@
-:root { --phi: 1.618; --ink: #121A21; --gold: #C5A059; --paper: #F2EFE6; }
+:root { --phi: 1.618; --ink: #0F1418; --gold: #C5A059; --paper: #FDFBF7; }
 
-body, html { margin: 0; padding: 0; background: #000; color: var(--ink); font-family: 'Georgia', serif; height: 100vh; overflow: hidden; }
+body { background: #000; margin: 0; font-family: 'Georgia', serif; overflow: hidden; }
 
-#ambient-bg {
+#ambient-vault {
     position: fixed; width: 100%; height: 100%;
-    background: radial-gradient(circle, #2c3e50 0%, #000 100%);
-    z-index: -1; opacity: 0.7;
+    background: radial-gradient(circle at center, #2c3e50 0%, #000 100%);
+    opacity: 0.8; z-index: -1;
 }
 
-.screen { 
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    height: 100vh; animation: fadeIn 1s forwards;
+.screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+
+/* GOLDEN RATIO GRID */
+.game-phi-grid {
+    display: grid; grid-template-columns: 1.618fr 1fr;
+    width: 95%; max-width: 1100px; gap: 30px;
 }
 
-/* PHI LAYOUT (61.8% vs 38.2%) */
-.menu-phi { 
-    display: grid; grid-template-columns: 1.618fr 1fr; 
-    width: 90%; max-width: 800px; gap: 20px; 
+.ink-huge {
+    font-size: 6.5rem; font-weight: bold; color: var(--ink);
+    margin: 40px 0; cursor: pointer; transition: 0.3s;
 }
 
-.card-phi {
-    background: var(--paper); padding: calc(20px * var(--phi));
-    border-radius: 4px; width: 80%; max-width: 500px;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+/* THE BUBBLE & PORTRAIT */
+.ink-bubble {
+    background: var(--paper); border-left: 4px solid var(--gold);
+    padding: calc(10px * var(--phi)); font-style: italic; font-size: 0.95rem;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
 }
 
-/* 36 CHAPTER GRID */
-#chapter-grid {
-    display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
-    padding: 20px; overflow-y: auto; max-height: 60vh;
-}
-.chap-node {
-    width: 50px; height: 50px; border: 1px solid var(--gold);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--gold); cursor: pointer; border-radius: 50%;
-}
-.locked { opacity: 0.3; filter: grayscale(1); }
+.btn-main { background: var(--ink); color: white; padding: 25px; border: 1px solid var(--gold); }
+.locked { opacity: 0.3; }
 
-/* TEXT STYLES */
-.ink-massive { font-size: 6rem; font-weight: bold; margin-bottom: 30px; }
-.phi-bubble { border-left: 3px solid var(--gold); padding: 15px; font-style: italic; font-size: 0.9rem; }
-
-/* INTEL CRAWL */
-.intro-text { color: white; font-size: 1.5rem; text-align: center; letter-spacing: 5px; animation: inkBleed 3s forwards; }
-
-@keyframes inkBleed { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: blur(0); } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-button { background: var(--ink); color: white; border: none; padding: 15px; cursor: pointer; font-weight: bold; letter-spacing: 2px; }
-button:hover { background: var(--gold); }
+/* FEEDBACK */
+.shake { animation: shake 0.4s; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
