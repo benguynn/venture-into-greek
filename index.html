@@ -5,161 +5,193 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Venture Into Greek</title>
     <style>
-        :root { --slate: #2C3E50; --gold: #D4AF37; --paper: #F4F4F4; --white: #FFFFFF; --green: #27AE60; --red: #E74C3C; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--paper); color: var(--slate); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
-        #app-container { width: 100%; max-width: 500px; padding: 20px; }
-        .card { background: var(--white); padding: 25px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); text-align: center; margin-bottom: 20px; transition: 0.3s; }
-        .xp-bar { font-weight: bold; color: var(--gold); font-size: 0.9rem; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        .manifesto { font-style: italic; font-size: 0.85rem; border-left: 4px solid var(--gold); padding-left: 15px; text-align: left; margin: 15px 0; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; }
-        button { background-color: var(--slate); color: white; border: none; padding: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; font-size: 1.1rem; }
-        button:hover { background-color: #34495e; }
-        .btn-gold { background-color: var(--gold); }
-        .word-display { font-size: 3.5rem; font-weight: bold; margin: 20px 0; color: var(--slate); }
-        .feedback-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; opacity: 0; transition: 0.3s; }
-        .icon-btn { display: inline-block; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); color: var(--gold); line-height: 40px; margin: 10px 5px; cursor: pointer; font-weight: bold; }
-        .apologetic-hint { background: #FFF9C4; padding: 15px; border-radius: 8px; margin-top: 10px; text-align: left; display: none; font-size: 0.9rem; border: 1px solid var(--gold); }
+        :root { --slate: #1A252F; --gold: #D4AF37; --paper: #F9F7F2; --white: #FFFFFF; --green: #27AE60; --red: #C0392B; }
+        body { font-family: 'Georgia', serif; background-color: var(--paper); color: var(--slate); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        #app-container { width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; }
+        .card { background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center; margin-bottom: 20px; border: 1px solid rgba(212, 175, 55, 0.1); position: relative; }
+        .xp-header { color: var(--gold); font-weight: bold; font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 20px; display: flex; justify-content: space-between; text-transform: uppercase; }
+        .word-display { font-size: 3.5rem; font-weight: bold; margin: 30px 0; animation: fadeIn 0.4s; }
+        .manifesto { font-style: italic; font-size: 0.9rem; border-left: 4px solid var(--gold); padding: 15px; text-align: left; background: #fff; margin: 25px 0; border-radius: 0 10px 10px 0; line-height: 1.5; }
+        button { background-color: var(--slate); color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; font-size: 1.1rem; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button:active { transform: scale(0.97); }
+        .btn-gold { background-color: var(--gold); color: white; }
+        .progress-line { width: 100%; height: 6px; background: #eee; border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
+        #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .intel-dossier { background: #1A252F; color: white; padding: 20px; border-radius: 12px; margin-top: 20px; display: none; text-align: left; font-size: 0.85rem; }
+        .leaderboard-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .user-row { background: #fff9c4; font-weight: bold; padding: 8px; border-radius: 4px; }
+        .verse-box { font-size: 1.5rem; line-height: 2.2; text-align: left; margin: 20px 0; }
+        .word-tap { cursor: pointer; border-bottom: 2px solid transparent; transition: 0.2s; }
+        .word-tap:hover { border-bottom: 2px solid var(--gold); background: #fdfdfd; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div id="feedback-overlay" class="feedback-flash"></div>
-
 <div id="app-container">
-    <div id="login-screen" class="card">
-        <h1 style="color:var(--gold)">Venture Into Greek</h1>
-        <p>Enter your Codex Key to begin.</p>
-        <input type="password" id="password-input" placeholder="Password">
-        <button onclick="checkPassword()">Unlock Access</button>
+    <div id="screen-login" class="card">
+        <h1 style="color:var(--gold); margin:0;">VENTURE</h1>
+        <p style="letter-spacing:5px; font-size:0.6rem; color:#999; margin-bottom:30px;">THE UNDERGROUND SCRIPTORIUM</p>
+        <input type="password" id="pass-input" placeholder="Codex Key" style="width:100%; padding:15px; border-radius:10px; border:1px solid #ddd; text-align:center; font-size:1.1rem;">
+        <button onclick="unlock()">UNSEAL ARCHIVES</button>
     </div>
 
-    <div id="main-screen" class="card" style="display:none">
-        <div class="xp-bar"><span>LEGACY XP: <span id="xp-display">0</span></span> <span>RANK: RECRUIT</span></div>
-        <h2>Select Your Act</h2>
-        <div class="manifesto">"Truth is something you work toward, not something you inherit."</div>
-        <button onclick="initAct(0)">ACT I: The De-Coder (Start Here)</button>
-        <button onclick="initAct(1)" id="btn-act2" style="opacity:0.5">ACT II: Tactical Nine (Locked)</button>
-        <button onclick="initAct(2)" id="btn-act3" style="opacity:0.5">ACT III: Extraction (Locked)</button>
-    </div>
-
-    <div id="game-screen" class="card" style="display:none">
-        <div id="game-header" style="font-size: 0.8rem; color: var(--gold); font-weight: bold; margin-bottom: 10px;"></div>
-        <div class="word-display" id="main-display"></div>
-        <div id="options-grid"></div>
-        
-        <div id="intel-tools" style="display:none">
-            <p style="font-size: 0.7rem; margin: 15px 0 5px 0;">TACTICAL INTEL:</p>
-            <span class="icon-btn" onclick="showHint('cert')">!</span>
-            <span class="icon-btn" onclick="showHint('ms')">🛡</span>
-            <span class="icon-btn" onclick="showHint('gram')">#</span>
-            <div id="hint-cert" class="apologetic-hint"><b>Certainty:</b> Greek 'Truth' (aletheia) is objective reality. Like a medic's report, it doesn't care about feelings—just facts.</div>
-            <div id="hint-ms" class="apologetic-hint"><b>Manuscripts:</b> The name "Jesus" is preserved with 99.9% accuracy across 5k fragments. The data is solid.</div>
-            <div id="hint-gram" class="apologetic-hint"><b>Article Logic:</b> In John 1:1, the missing 'The' defines WHO Christ is (Nature) without confusing HIM with the Father.</div>
+    <div id="screen-game" class="card" style="display:none">
+        <div class="progress-line"><div id="progress-fill"></div></div>
+        <div class="xp-header"><span id="act-label">ACT I: CRAWL</span> <span id="xp-count">XP: 0</span></div>
+        <div id="game-ui">
+            <p id="instruction" style="font-weight:bold; margin-bottom:10px;"></p>
+            <div id="display-area"></div>
+            <div id="options-area"></div>
         </div>
+        <div id="intel-dossier" class="intel-dossier">
+            <h4 style="color:var(--gold); margin-top:0;">📂 INTELLIGENCE DOSSIER</h4>
+            <div id="intel-content"></div>
+        </div>
+    </div>
+
+    <div id="screen-success" class="card" style="display:none">
+        <h2 style="color:var(--gold)">MISSION SUCCESS</h2>
+        <div id="leaderboard-container" style="text-align:left; margin: 20px 0;">
+            <p style="font-weight:bold; color:var(--slate);">REGIONAL SCRIPTORIUM RANKINGS:</p>
+            <div id="board-rows"></div>
+        </div>
+        <div class="manifesto">"Truth is something you work toward, not something you inherit."</div>
+        <button onclick="location.reload()">RE-START TRAINING</button>
+        <button class="btn-gold" onclick="window.location.href='mailto:benguynn@gmail.com'">SEND FIELD REPORT</button>
     </div>
 </div>
 
 <script>
-    const PASS = "VentureIntoGreek";
-    let xp = 0;
-    let currentAct = 0;
-    let step = 0;
+    // AUTOMATIC PROGRESS CLEAR FOR UPDATES
+    localStorage.clear();
 
-    const acts = [
-        { 
-            title: "ACT I: THE DE-CODER",
-            type: "match",
-            data: [
-                { q: "Χριστός", a: "Christ", note: "Start with what you know." },
-                { q: "ἄγγελος", a: "Angel", note: "Recognize the shape." },
-                { q: "ν", a: "n", note: "False Friend: Looks like 'v', is 'n'." }
-            ]
-        },
-        {
-            title: "ACT II: TACTICAL NINE",
-            type: "match",
-            data: [
-                { q: "θεός", a: "God" }, { q: "λόγος", e: "Word" }, { q: "ἀλήθεια", a: "Truth" }
-            ]
-        }
+    const PASS = "VentureIntoGreek";
+    let state = { act: 1, step: 0, xp: 0, unlockedIntel: [] };
+
+    // ACT 1: CRAWL (The Cognate Sprint)
+    const crawlData = [
+        { q: "Χριστός", a: "Christ", n: "Too easy? Good. Keep moving." },
+        { q: "βάπτισμα", a: "Baptism", n: "The 'B' and 'P' are visible. Sound it out." },
+        { q: "ἄγγελος", a: "Angel", n: "Looks like 'angle', means messenger." },
+        { q: "ἀμήν", a: "Amen", n: "A universal word for the Church." },
+        { q: "βιβλίον", a: "Book", n: "Source of the word 'Bible'." },
+        { q: "θρόνος", a: "Throne", n: "The 'TH' is the circle with the bar." },
+        { q: "ἀπόστολος", a: "Apostle", n: "One who is sent." },
+        { q: "Satan", a: "Σατανᾶς", n: "Reverse match! Can you spot it?" },
+        { q: "Prophet", a: "προφήτης", n: "Check the 'P' and 'R'." },
+        { q: "ν", a: "n", n: "MEDIC ALERT: Looks like a 'v', sounds like an 'n'." },
+        { q: "ρ", a: "r", n: "MEDIC ALERT: Looks like a 'p', sounds like an 'r'." }
     ];
 
-    function checkPassword() {
-        if(document.getElementById('password-input').value === PASS) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-screen').style.display = 'block';
-        } else { flash('red'); }
+    // ACT 2: WALK (The Tactical Nine)
+    const walkData = [
+        { q: "θεός", a: "God", intel: "<b>Article Logic:</b> In John 1:1, the missing 'the' defines Nature, not Person." },
+        { q: "λόγος", a: "Word", intel: "<b>Logos:</b> The divine logic that holds the universe together." },
+        { q: "Ἰησοῦς", a: "Jesus", intel: "<b>Manuscripts:</b> Over 5k early fragments agree on this name. The data is solid." },
+        { q: "ἀλήθεια", a: "Truth", intel: "<b>Certainty:</b> In Luke 1:4, Truth is a 'safety cable' (asphaleia) for historical data." },
+        { q: "βασιλεία", a: "Kingdom", intel: "<b>Victory:</b> The Gospel is a military report of a King's victory." },
+        { q: "εὐαγγέλιον", a: "Gospel", intel: "<b>The News:</b> Reliable testimony of actual events." }
+    ];
+
+    // ACT 3: RUN (The Extraction)
+    const runData = [
+        { verse: "Ἐν ἀρχῇ ἦν ὁ λόγος", target: "λόγος", prompt: "Identify the 'Word' in John 1:1" },
+        { verse: "ἵνα ἐπιγνῷς τὴν ἀσφάλειαν", target: "ἀσφάλειαν", prompt: "Identify Luke's 'Certainty' in Luke 1:4" }
+    ];
+
+    function unlock() {
+        if(document.getElementById('pass-input').value === PASS) {
+            document.getElementById('screen-login').style.display = 'none';
+            document.getElementById('screen-game').style.display = 'block';
+            run();
+        } else { alert("Key Invalid."); }
     }
 
-    function initAct(index) {
-        if(index > 0 && xp < 30) { alert("Complete Act I first!"); return; }
-        currentAct = index;
-        step = 0;
-        document.getElementById('main-screen').style.display = 'none';
-        document.getElementById('game-screen').style.display = 'block';
-        loadStep();
-    }
-
-    function loadStep() {
-        const act = acts[currentAct];
-        document.getElementById('game-header').innerText = act.title;
-        const display = document.getElementById('main-display');
-        const grid = document.getElementById('options-grid');
-        const item = act.data[step];
+    function run() {
+        const display = document.getElementById('display-area');
+        const opts = document.getElementById('options-area');
+        const inst = document.getElementById('instruction');
+        const fill = document.getElementById('progress-fill');
+        const label = document.getElementById('act-label');
         
-        display.innerText = item.q;
-        grid.innerHTML = '';
-        
-        let options = [item.a, "Spirit", "Life", "Earth"].sort(() => Math.random() - 0.5);
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.innerText = opt;
-            btn.onclick = () => checkAnswer(opt === item.a);
-            grid.appendChild(btn);
-        });
+        display.innerHTML = ''; opts.innerHTML = ''; inst.innerText = '';
+        let db = (state.act === 1) ? crawlData : (state.act === 2) ? walkData : runData;
+        fill.style.width = (state.step / db.length) * 100 + "%";
 
-        if(currentAct > 0) document.getElementById('intel-tools').style.display = 'block';
-    }
-
-    function checkAnswer(isCorrect) {
-        if(isCorrect) {
-            flash('green');
-            xp += 10;
-            document.getElementById('xp-display').innerText = xp;
-            step++;
-            if(step < acts[currentAct].data.length) {
-                loadStep();
-            } else {
-                alert("ACT COMPLETE! +50 Legacy Points.");
-                xp += 50;
-                if(currentAct === 0) document.getElementById('btn-act2').style.opacity = "1";
-                goHome();
-            }
-        } else {
-            flash('red');
-            alert("Accuracy is a medical requirement. Try again.");
+        if(state.act === 1) {
+            label.innerText = "ACT I: THE CRAWL";
+            let item = db[state.step];
+            inst.innerText = item.n;
+            display.innerHTML = `<div class="word-display">${item.q}</div>`;
+            let choices = [item.a, "Water", "Life", "Earth"].sort(() => Math.random() - 0.5);
+            choices.forEach(c => createBtn(c, c === item.a, opts));
+        } else if (state.act === 2) {
+            label.innerText = "ACT II: THE WALK";
+            let item = db[state.step];
+            inst.innerText = "Precision Triage. Unlock the intel.";
+            display.innerHTML = `<div class="word-display">${item.q}</div>`;
+            let choices = [item.a, "Man", "World", "Faith"].sort(() => Math.random() - 0.5);
+            choices.forEach(c => createBtn(c, c === item.a, opts));
+        } else if (state.act === 3) {
+            label.innerText = "ACT III: THE RUN";
+            let item = db[state.step];
+            inst.innerText = item.prompt;
+            let v = document.createElement('div'); v.className = 'verse-box';
+            item.verse.split(' ').forEach(w => {
+                let s = document.createElement('span'); s.className = 'word-tap'; s.innerText = w + ' ';
+                s.onclick = () => check(w === item.target); v.appendChild(s);
+            });
+            display.appendChild(v);
         }
     }
 
-    function flash(color) {
-        const overlay = document.getElementById('feedback-overlay');
-        overlay.style.backgroundColor = (color === 'green') ? 'rgba(39, 174, 96, 0.3)' : 'rgba(231, 76, 60, 0.3)';
-        overlay.style.opacity = '1';
-        setTimeout(() => overlay.style.opacity = '0', 300);
+    function createBtn(txt, correct, parent) {
+        let b = document.createElement('button'); b.innerText = txt;
+        b.onclick = () => check(correct); parent.appendChild(b);
     }
 
-    function goHome() {
-        document.getElementById('game-screen').style.display = 'none';
-        document.getElementById('main-screen').style.display = 'block';
+    function check(isCorrect) {
+        if(isCorrect) {
+            let db = (state.act === 1) ? crawlData : (state.act === 2) ? walkData : runData;
+            if(state.act === 2 && db[state.step].intel) {
+                state.unlockedIntel.push(db[state.step].intel);
+                showIntel();
+            }
+            state.step++; state.xp += 10;
+            document.getElementById('xp-count').innerText = "XP: " + state.xp;
+            if(state.step >= db.length) {
+                state.act++; state.step = 0;
+                if(state.act > 3) { showLeaderboard(); } else { run(); }
+            } else { run(); }
+        } else { alert("Negative. Re-evaluate the vitals."); }
     }
 
-    function showHint(id) {
-        document.querySelectorAll('.apologetic-hint').forEach(h => h.style.display = 'none');
-        document.getElementById('hint-' + id).style.display = 'block';
+    function showIntel() {
+        const dossier = document.getElementById('intel-dossier');
+        const content = document.getElementById('intel-content');
+        dossier.style.display = 'block';
+        content.innerHTML = state.unlockedIntel.join("<br><br>");
     }
 
-    function showFeedback() {
-        window.location.href = "mailto:benguynn@gmail.com?subject=VentureFeedback&body=Ashlee, tell me what's hard!";
+    function showLeaderboard() {
+        document.getElementById('screen-game').style.display = 'none';
+        document.getElementById('screen-success').style.display = 'block';
+        const board = document.getElementById('board-rows');
+        const names = [
+            {n: "Timothy", xp: 1200}, {n: "Lydia", xp: 1150}, {n: "Apollos", xp: 1050}, 
+            {n: "Silas", xp: 950}, {n: "Phoebe", xp: 850}, {n: "Titus", xp: 750}, 
+            {n: "Barnabas", xp: 650}, {n: "Philemon", xp: 550}, {n: "Epaphras", xp: 450}
+        ];
+        // Insert user at index 2 (3rd place)
+        names.splice(2, 0, {n: "YOU", xp: state.xp + 1000});
+        
+        names.forEach((p, i) => {
+            let row = document.createElement('div');
+            row.className = 'leaderboard-row' + (p.n === "YOU" ? " user-row" : "");
+            row.innerHTML = `<span>${i+1}. ${p.n}</span> <span>${p.xp} XP</span>`;
+            board.appendChild(row);
+        });
     }
 </script>
 
