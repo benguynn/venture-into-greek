@@ -1,82 +1,74 @@
 :root {
     --slate: #121A21;
     --gold: #D4AF37;
-    --gold-glow: rgba(212, 175, 55, 0.4);
-    --parchment: #FDFBF7;
+    --paper: #FDFBF7;
     --white: #FFFFFF;
 }
 
 body {
-    background: radial-gradient(circle, #2c3e50 0%, #000000 100%);
+    background-color: #0F1418;
     color: var(--slate);
     font-family: 'Georgia', serif;
     margin: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
 }
 
 #app-container { width: 100%; max-width: 500px; padding: 15px; }
 
 .card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 40px 30px;
-    border-radius: 30px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    border: 1px solid var(--gold);
-    text-align: center;
-}
-
-/* THE MASSIVE GREEK */
-.huge-greek {
-    font-size: 5rem;
-    font-weight: bold;
-    color: var(--slate);
-    margin: 40px 0;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    animation: pulseText 2s infinite ease-in-out;
-}
-
-/* VISUALLY STUNNING TRACKERS */
-.bar-bg {
-    width: 100%;
-    height: 10px;
-    background: #e0e0e0;
-    border-radius: 20px;
-    overflow: hidden;
-    margin: 5px 0 15px 0;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--gold), #f1c40f);
-    box-shadow: 0 0 15px var(--gold-glow);
-    width: 0%;
-    transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* CUSTOM MODAL UI */
-#modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 1000; transition: 0.3s;
-}
-.modal-hide { opacity: 0; pointer-events: none; }
-.modal-card {
     background: var(--white);
-    padding: 30px; border-radius: 20px; width: 85%; max-width: 400px;
-    border: 2px solid var(--gold);
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    text-align: center;
+    margin-top: 50px;
 }
 
-.btn-gold { background: var(--gold); color: white; }
+.huge-static-greek {
+    font-size: 5.5rem; /* Massive but stable */
+    font-weight: bold;
+    margin: 40px 0;
+    color: var(--slate);
+}
+
+/* Stunning Progress Bar */
+.master-bar {
+    width: 100%; height: 12px;
+    background: #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.master-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #B8860B, var(--gold));
+    width: 0%;
+    transition: width 0.8s ease;
+}
+
+/* Navigation Bar */
+#act-navigator {
+    display: flex; gap: 10px; margin-bottom: 15px;
+    transition: opacity 0.5s;
+}
+.nav-hidden { opacity: 0; pointer-events: none; }
+
+#options-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px;
+}
+
 button {
-    padding: 18px; border-radius: 12px; border: none; font-weight: bold;
-    width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s;
+    background: var(--slate); color: white;
+    padding: 20px; border: none; border-radius: 8px;
+    font-weight: bold; cursor: pointer; transition: 0.2s;
 }
 
-@keyframes pulseText { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+button:hover { background: var(--gold); }
+
+#intel-feed {
+    margin-top: 25px; font-size: 0.85rem; font-style: italic; color: #7f8c8d;
+    min-height: 40px; border-top: 1px solid #eee; padding-top: 15px;
+}
