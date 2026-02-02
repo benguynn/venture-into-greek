@@ -1,0 +1,54 @@
+:root {
+    --phi: 1.618;
+    --ink: #121A21;
+    --gold: #C5A059;
+    --paper: #FDFBF7;
+    --silo-bg: #0F1418;
+}
+
+body, html {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    background-color: var(--silo-bg);
+    color: var(--ink);
+    font-family: 'Georgia', serif;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+#ambient-silo {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('stone-texture.jpg');
+    background-size: cover;
+    opacity: 0.2; z-index: -2;
+}
+
+#torch-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, transparent 20%, #000 100%);
+    z-index: -1;
+}
+
+.screen { display: none; height: 100%; width: 100%; flex-direction: column; }
+.screen.active { display: flex; }
+
+.phi-box-support { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+.phi-box-interaction { flex: 1.618; padding: 20px; display: flex; flex-direction: column; }
+
+.ink-main-display { font-size: 4rem; font-weight: bold; text-align: center; color: white; margin: 10px 0; }
+.parchment-bubble { background: var(--paper); padding: 15px; border-radius: 4px; font-style: italic; font-size: 0.9rem; margin-bottom: 10px; border-left: 4px solid var(--gold); }
+
+#interaction-braid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: auto; }
+button { background: var(--ink); color: white; padding: 18px; border: 1px solid var(--gold); border-radius: 4px; font-weight: bold; }
+button:active { background: var(--gold); }
+
+.ring-container { position: relative; width: 150px; }
+.ring-track { fill: none; stroke: #333; stroke-width: 8; }
+.ring-fill { fill: none; stroke: var(--gold); stroke-width: 8; stroke-dasharray: 283; stroke-dashoffset: 283; transition: 2s; }
+#pct-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 1.2rem; }
+
+#chapter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+.chap-node { width: 60px; height: 60px; border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); }
+.locked { opacity: 0.3; }
+
+.shake { animation: shakeEffect 0.4s; }
+@keyframes shakeEffect { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
