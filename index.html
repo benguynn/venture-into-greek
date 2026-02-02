@@ -8,39 +8,31 @@
 </head>
 <body>
     <div id="app-container">
-        <div id="modal-overlay" class="modal-hide">
-            <div class="modal-card">
-                <h3 id="modal-title"></h3>
-                <p id="modal-body"></p>
-                <div class="modal-btns">
-                    <button id="modal-primary" class="btn-gold"></button>
-                    <button id="modal-secondary"></button>
-                </div>
-            </div>
-        </div>
+        <nav id="act-navigator" class="nav-hidden">
+            <button onclick="switchAct(1)">ACT I</button>
+            <button id="nav-act2" onclick="switchAct(2)">ACT II</button>
+            <button id="nav-act3" onclick="switchAct(3)">ACT III</button>
+            <button onclick="window.location.href='dossier.html'">DOSSIER</button>
+        </nav>
 
         <div id="screen-login" class="card">
             <h1 class="logo">SCRIPTORIUM</h1>
-            <div class="character-box"><img src="scribe-icon.png" alt="" id="char-login"></div>
             <input type="password" id="pass-input" placeholder="CODEX KEY">
             <button onclick="unlock()">UNSEAL ARCHIVES</button>
         </div>
 
         <div id="screen-game" class="card" style="display:none">
-            <div class="trackers">
-                <div class="track-item"><span>ACT</span><span id="act-pct">0%</span></div>
-                <div class="bar-bg"><div id="act-fill" class="bar-fill"></div></div>
-                <div class="track-item"><span>CHAPTER 1</span><span id="chap-pct">0%</span></div>
-                <div class="bar-bg"><div id="chap-fill" class="bar-fill"></div></div>
+            <div class="progress-section">
+                <div class="track-label"><span>CHAPTER 1 MASTERY</span><span id="chap-pct">0%</span></div>
+                <div class="master-bar"><div id="chap-fill" class="master-fill"></div></div>
             </div>
 
             <div id="game-stage">
-                <div id="character-comment" class="bubble">"Slow is smooth, smooth is fast."</div>
-                <div id="display-area" class="huge-greek"></div>
-                <div id="interaction-zone"></div>
+                <div id="display-area" class="huge-static-greek"></div>
+                <div id="options-grid"></div>
             </div>
-
-            <div id="intel-toast" class="toast"></div>
+            
+            <div id="intel-feed"></div>
         </div>
     </div>
     <script src="script.js"></script>
