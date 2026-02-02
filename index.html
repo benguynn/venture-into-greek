@@ -14,7 +14,7 @@
         button { background-color: var(--slate); color: var(--white); border: none; padding: 15px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; font-size: 1rem; }
         .btn-gold { background-color: var(--gold); }
         .apologetic-box { background: #fffde7; border: 1px solid var(--gold); border-radius: 8px; padding: 10px; margin-top: 15px; font-size: 0.85rem; text-align: left; display: none; }
-        .icon-btn { display: inline-block; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold); line-height: 24px; margin: 0 5px; cursor: pointer; font-size: 0.8rem; }
+        .icon-btn { display: inline-block; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold); line-height: 30px; margin: 0 5px; cursor: pointer; font-size: 1rem; }
     </style>
 </head>
 <body>
@@ -22,39 +22,37 @@
 <div id="app-container">
     <div id="login-screen" class="card">
         <h2 style="color: var(--gold)">Codex Key Required</h2>
-        <p>Venture Church Underground Scriptorium</p>
         <input type="password" id="password-input" placeholder="Enter Password">
         <button onclick="checkPassword()">Unlock Access</button>
     </div>
 
     <div id="main-screen" class="card" style="display:none">
-        <h2 style="color: var(--slate)">Venture Into Greek</h2>
+        <h2>Venture Into Greek</h2>
         <div class="manifesto">
             "I built this app to empower you to read the original New Testament text for yourself, because truth is something you work toward, not something you inherit."
         </div>
-        <button onclick="startDrill()">Start Weeks 1-3 Triage</button>
+        <button onclick="startDrill()">Start Triage Drill (9 Words)</button>
         <button class="btn-gold" onclick="showFeedback()">Tactical Comms (Feedback)</button>
     </div>
 
     <div id="drill-screen" class="card" style="display:none">
-        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
             <span>Mastery: <b id="score">0</b>%</span>
             <span>Accuracy Required</span>
         </div>
-        <div id="drill-content">
-            <p id="greek-display" style="font-size: 2.5rem; margin: 20px 0;"></p>
-            <div id="options-container"></div>
-            
-            <div style="margin-top: 20px;">
-                <span class="icon-btn" onclick="toggleHint('cert')">!</span>
-                <span class="icon-btn" onclick="toggleHint('ms')">🛡</span>
-                <span class="icon-btn" onclick="toggleHint('gram')">#</span>
-            </div>
-            
-            <div id="hint-cert" class="apologetic-box"><b>Certainty:</b> This word in Luke 1:4 refers to a 'safety cable'—verified historical data you can lean your whole weight on.</div>
-            <div id="hint-ms" class="apologetic-box"><b>Manuscripts:</b> This name appears identically across 5,000+ early fragments. The identity was never 'edited.'</div>
-            <div id="hint-gram" class="apologetic-box"><b>Article Logic:</b> Notice the absence of 'the.' This defines the nature of the Subject without confusing the Person.</div>
+        <p id="greek-display" style="font-size: 2.8rem; margin: 25px 0; font-weight: bold;"></p>
+        <div id="options-container"></div>
+        
+        <div style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px;">
+            <p style="font-size: 0.8rem; color: #7f8c8d; margin-bottom: 10px;">TAP FOR INTEL:</p>
+            <span class="icon-btn" onclick="toggleHint('cert')">!</span>
+            <span class="icon-btn" onclick="toggleHint('ms')">🛡</span>
+            <span class="icon-btn" onclick="toggleHint('gram')">#</span>
         </div>
+        
+        <div id="hint-cert" class="apologetic-box"><b>Certainty:</b> Used in Luke 1:4. Greek truth isn't an opinion; it's a 'safety cable'—verified data you can lean on.</div>
+        <div id="hint-ms" class="apologetic-box"><b>Manuscripts:</b> Over 5,000 early Greek fragments agree on these core identities. The ink is reliable.</div>
+        <div id="hint-gram" class="apologetic-box"><b>Article Logic:</b> In John 1:1, the absence of "the" tells us Christ is God in nature, but a distinct Person.</div>
     </div>
 </div>
 
@@ -66,7 +64,10 @@
         { g: "Ἰησοῦς", e: "Jesus", hint: "ms" },
         { g: "ἀλήθεια", e: "Truth", hint: "cert" },
         { g: "βασιλεία", e: "Kingdom", hint: "ms" },
-        { g: "εὐαγγέλιον", e: "Gospel", hint: "cert" }
+        { g: "εὐαγγέλιον", e: "Gospel", hint: "cert" },
+        { g: "γινώσκω", e: "I know", hint: "cert" },
+        { g: "λέγω", e: "I say", hint: "gram" },
+        { g: "ἔρχομαι", e: "I come", hint: "ms" }
     ];
     let currentIndex = 0;
     let score = 0;
@@ -90,8 +91,8 @@
         const container = document.getElementById('options-container');
         container.innerHTML = '';
         
-        // Shuffle simple options
-        let choices = [item.e, vocab[(currentIndex + 1) % vocab.length].e].sort();
+        let choices = [item.e, vocab[(currentIndex + 1) % vocab.length].e, vocab[(currentIndex + 2) % vocab.length].e].sort(() => Math.random() - 0.5);
+        
         choices.forEach(choice => {
             const btn = document.createElement('button');
             btn.innerText = choice;
@@ -99,18 +100,17 @@
             btn.onclick = () => checkAnswer(choice === item.e);
             container.appendChild(btn);
         });
-        // Hide hints
         document.querySelectorAll('.apologetic-box').forEach(b => b.style.display = 'none');
     }
 
     function checkAnswer(correct) {
         if(correct) {
-            score += Math.floor(100/vocab.length);
-            document.getElementById('score').innerText = score;
             currentIndex++;
+            score = Math.round((currentIndex / vocab.length) * 100);
+            document.getElementById('score').innerText = score;
             if(currentIndex < vocab.length) { loadQuestion(); }
-            else { alert("Mastery Achieved for Weeks 1-3!"); location.reload(); }
-        } else { alert("Triage required. Look at the icons for a hint."); }
+            else { alert("Mastery Achieved. You're ready for the Deep."); location.reload(); }
+        } else { alert("Triage required. Accuracy is priority. Check the 'Intel' icons."); }
     }
 
     function toggleHint(type) {
@@ -119,7 +119,7 @@
     }
 
     function showFeedback() {
-        window.location.href = "mailto:benguynn@gmail.com?subject=VentureFeedback&body=(Use your mic icon to leave feedback)";
+        window.location.href = "mailto:benguynn@gmail.com?subject=VentureFeedback&body=(Tap the mic icon on your keyboard to speak your feedback)";
     }
 </script>
 </body>
