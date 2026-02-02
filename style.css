@@ -1,30 +1,56 @@
-:root { --ink: #121A21; --gold: #D4AF37; --paper: #FDFBF7; --dim: #7f8c8d; }
+:root { --ink: #1A1A1A; --gold: #C5A059; --paper: #F2EFE6; }
 
-body { background: #000; color: var(--ink); font-family: 'Georgia', serif; display: flex; justify-content: center; min-height: 100vh; margin: 0; }
-#app-container { width: 100%; max-width: 480px; padding: 15px; }
+body { 
+    margin: 0; padding: 0; height: 100vh; 
+    background: #000; overflow: hidden;
+    display: flex; justify-content: center; align-items: center;
+}
 
-.card { background: var(--paper); padding: 40px 25px; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.8); text-align: center; margin-top: 30px; }
+#ambient-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/dark-stone.png'), radial-gradient(circle, #2c3e50 0%, #000 100%);
+    opacity: 0.8; z-index: -1;
+}
 
-/* THE MASSIVE INK */
-.massive-ink { font-size: 5.5rem; font-weight: bold; margin: 30px 0; transition: transform 0.3s; }
-.breathe { animation: inkBreathe 4s infinite ease-in-out; }
-@keyframes inkBreathe { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.04); color: var(--gold); } }
+.parchment {
+    background: var(--paper);
+    width: 100%; max-width: 420px;
+    padding: 40px; border-radius: 4px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 100px rgba(0,0,0,0.05);
+    border: 1px solid #d4cbb3; position: relative;
+    transition: transform 0.1s; /* For Shake */
+}
 
-/* THE SPEAKER HITBOX (Larger/Minimal) */
-#speaker-hitbox { width: 100px; height: 60px; margin: 0 auto -20px auto; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-#speaker-icon { font-size: 1.2rem; color: var(--gold); opacity: 0.6; }
+/* THE INK */
+.ink-main {
+    font-size: 5.5rem; font-weight: bold; color: var(--ink);
+    margin: 40px 0; cursor: pointer; position: relative;
+}
 
-/* ENSEMBLE STAGE */
-#stage { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; min-height: 80px; }
-#char-portrait { font-size: 2.5rem; filter: grayscale(100%); transition: 0.5s; }
-.bubble { background: #fff; border: 1px solid #ddd; padding: 12px; border-radius: 8px; font-size: 0.85rem; text-align: left; flex: 1; display: none; }
+#speaker-seal {
+    width: 40px; height: 40px; margin: -20px auto 20px auto;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23C5A059"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>') no-repeat center;
+    opacity: 0.1; transition: 0.3s;
+}
+.ink-main:hover + #speaker-seal, .breathing + #speaker-seal { opacity: 0.6; }
 
-/* GRID & HUD */
-#interaction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-button { background: var(--ink); color: #fff; padding: 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-.btn-enter { width: 100px; margin: 0 auto; background: var(--gold); }
+/* PROGRESS CIRCLE (Victory Screen Only) */
+.progress-ring-container { position: relative; width: 150px; margin: 20px auto; }
+.ring-bg { fill: none; stroke: #eee; stroke-width: 5; }
+.ring-fill { 
+    fill: none; stroke: var(--gold); stroke-width: 5; 
+    stroke-dasharray: 283; stroke-dashoffset: 283;
+    transition: stroke-dashoffset 2s ease-out;
+}
+#pct-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-weight: bold; font-size: 1.5rem; }
 
-.hud-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.6rem; color: #555; margin-bottom: 4px; }
-.track { width: 75%; height: 4px; background: #333; overflow: hidden; }
-.fill { height: 100%; background: var(--gold); width: 0%; transition: 1s; }
-.hidden { display: none; }
+/* FEEDBACK */
+.shake { animation: shake 0.4s; }
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* CHARACTERS */
+.ink-bubble { font-size: 0.9rem; font-style: italic; border-left: 3px solid var(--gold); padding-left: 15px; text-align: left; margin-bottom: 20px; }
