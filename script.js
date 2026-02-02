@@ -1,90 +1,68 @@
-localStorage.clear();
-
-const STATE = { act: 1, step: 0, total: 0, current: null, errors: 0 };
-
-const ACT1_CONTENT = [
-    { q: "ἀγάπη", a: "love", why: "English 'love' is a catch-all. Agape is the specific, sacrificial ink of the New Testament.", m: "Mouth hung agape at such love." },
-    { q: "ζωή", a: "life", why: "Zoe is not just biological existence; it's the quality of life found in Christ.", m: "The zoo is full of life." },
-    { q: "ἀλήθεια", a: "truth", i: "The athlete was doping; there was no hiding the truth." }
+const ROOTS_DATA = [
+    { root: "θε-", act1: "θεός", act2: "θεότης", why: "John 1:1 uses 'Theos' to define the Nature of the Word." },
+    { root: "λογ-", act1: "λόγος", act2: "λογικός", why: "Scripture claims the universe is sustained by a divine 'Logos'." },
+    { root: "ζω-", act1: "ζωή", act2: "ζωοποιέω", why: "Jesus said, 'I am the Resurrection and the Life (Zoe).'" },
+    { root: "ἀληθ-", act1: "ἀλήθεια", act2: "ἀληθινός", why: "Pilate asked: 'What is Truth?' while standing before the Aletheia." }
 ];
 
-function enter() {
-    if(document.getElementById('pass').value.toUpperCase() === "VIG") {
-        document.getElementById('screen-login').style.display = 'none';
-        document.getElementById('screen-game').style.display = 'block';
-        loadQuestion();
+const STATE = { chapter: 1, act: 1, totalCorrect: 0 };
+
+// 1. INTEL CRAWL START
+setTimeout(() => {
+    document.getElementById('screen-intro').style.display = 'none';
+    document.getElementById('screen-title').style.display = 'flex';
+}, 3000);
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'flex';
+    if(id === 'screen-map') generateMap();
+}
+
+function generateMap() {
+    const grid = document.getElementById('chapter-grid');
+    grid.innerHTML = '';
+    for(let i=1; i<=36; i++) {
+        const node = document.createElement('div');
+        node.className = `chap-node ${i > STATE.chapter ? 'locked' : ''}`;
+        node.innerText = i;
+        if(i === 1) node.onclick = () => startChapter(1);
+        grid.appendChild(node);
     }
 }
 
-function loadQuestion() {
-    const display = document.getElementById('greek-main');
+function startChapter(num) {
+    STATE.chapter = num;
+    showScreen('screen-game');
+    loadGame();
+}
+
+function loadGame() {
+    const display = document.getElementById('greek-display');
+    const bubble = document.getElementById('intel-bubble');
     const grid = document.getElementById('interaction-grid');
-    const bubble = document.getElementById('chat-bubble');
     
-    grid.innerHTML = ''; 
-    state.current = ACT1_CONTENT[state.step % ACT1_CONTENT.length];
-
-    display.innerText = state.current.q;
-    bubble.innerText = state.current.why || state.current.m;
-
-    let choices = [state.current.a, "world", "sin", "power"].sort(() => Math.random() - 0.5);
-    choices.forEach(c => {
-        const b = document.createElement('button');
-        b.className = "btn-minimal";
-        b.innerText = c;
-        b.onclick = () => check(c === state.current.a);
-        grid.appendChild(b);
+    // Act 1 logic (The Crawl)
+    display.innerText = "ἀλήθεια";
+    bubble.innerText = "Pilate stood before the 'Aletheia' (Truth) and didn't recognize it.";
+    
+    // Multiple variations of questions...
+    ["Truth", "World", "Sin"].forEach(choice => {
+        const btn = document.createElement('button');
+        btn.innerText = choice;
+        btn.onclick = () => handleCorrect();
+        grid.appendChild(btn);
     });
 }
 
-function check(correct) {
-    if(!correct) {
-        state.errors++;
-        triggerFeedback();
-        return;
+function handleCorrect() {
+    STATE.totalCorrect++;
+    // Add logic for transitions and Act switching
+    loadGame();
+}
+
+function enter() {
+    if(document.getElementById('pass').value.toUpperCase() === "VIG") {
+        showScreen('screen-title');
     }
-    
-    state.errors = 0;
-    state.step++; state.total++;
-    
-    if(state.step === 12) { showSummary(); }
-    else { loadQuestion(); }
-}
-
-function triggerFeedback() {
-    const card = document.querySelector('.parchment');
-    card.classList.add('shake');
-    setTimeout(() => card.classList.remove('shake'), 400);
-
-    // Haptic Logic
-    if ("vibrate" in navigator) {
-        if(state.errors === 1) navigator.vibrate(50);
-        if(state.errors === 2) navigator.vibrate([100, 50, 100]);
-        if(state.errors >= 3) {
-            navigator.vibrate(500);
-            document.body.style.background = "#400";
-            setTimeout(() => document.body.style.background = "#000", 300);
-        }
-    }
-}
-
-function showSummary() {
-    document.getElementById('screen-game').style.display = 'none';
-    document.getElementById('screen-summary').style.display = 'block';
-    
-    const ring = document.getElementById('progress-ring');
-    const pct = Math.min(100, (state.total / 48) * 100);
-    const offset = 283 - (283 * pct) / 100;
-    
-    setTimeout(() => {
-        ring.style.strokeDashoffset = offset;
-        document.getElementById('pct-label').innerText = Math.round(pct) + "%";
-    }, 500);
-}
-
-function speakCurrent() {
-    window.speechSynthesis.cancel();
-    const msg = new SpeechSynthesisUtterance(state.current.q);
-    msg.lang = 'el-GR';
-    window.speechSynthesis.speak(msg);
 }
