@@ -82,3 +82,22 @@ function triggerError() {
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js');
 }
+async function loadPersonnelIcons() {
+    try {
+        const response = await fetch('dinosaur_sketches.html');
+        const text = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+        
+        // Example: Pull the Velociraptor SVG to start
+        const raptorSvg = doc.querySelector('.sketch-card:nth-child(1) svg');
+        if (raptorSvg) {
+            document.getElementById('char-icon').innerHTML = raptorSvg.outerHTML;
+        }
+    } catch (e) {
+        console.warn("Could not retrieve personnel sketches from silo.");
+    }
+}
+
+// Trigger this when the game starts
+window.addEventListener('DOMContentLoaded', loadPersonnelIcons);
