@@ -3,141 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Venture Into Greek</title>
-    <style>
-        :root { --slate: #1A252F; --gold: #D4AF37; --paper: #F9F7F2; --white: #FFFFFF; }
-        body { font-family: 'Georgia', serif; background-color: var(--paper); color: var(--slate); margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
-        #app-container { width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; }
-        .card { background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center; margin-bottom: 20px; border: 1px solid rgba(212, 175, 55, 0.1); transition: 0.3s; }
-        .word-display { font-size: 3.5rem; font-weight: bold; margin: 30px 0; animation: fadeIn 0.8s; }
-        button { background-color: var(--slate); color: white; border: none; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; font-size: 1.1rem; }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .progress-line { width: 100%; height: 6px; background: #eee; border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
-        #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: 1.5s ease-in-out; }
-        .leaderboard-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
-        .user-row { background: #fff9c4; font-weight: bold; border-radius: 8px; border: 1px solid var(--gold); }
-        .tactical-pause { color: var(--gold); font-size: 0.8rem; font-weight: bold; margin: 10px 0; display: none; }
-        .dossier-text { font-size: 0.9rem; text-align: left; background: #1A252F; color: white; padding: 15px; border-radius: 8px; margin-top: 20px; display: none; line-height: 1.5; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
+    <title>The Scriptorium</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<script>localStorage.clear();</script>
-
-<div id="app-container">
-    <div id="screen-login" class="card">
-        <h1 style="color:var(--gold); margin:0;">VENTURE</h1>
-        <p style="letter-spacing:5px; font-size:0.6rem; color:#999; margin-bottom:30px;">THE UNDERGROUND SCRIPTORIUM</p>
-        <input type="password" id="pass-input" placeholder="Codex Key" style="width:100%; padding:15px; border-radius:10px; border:1px solid #ddd; text-align:center;">
-        <button onclick="unlock()">UNSEAL ARCHIVES</button>
-    </div>
-
-    <div id="screen-game" class="card" style="display:none">
-        <div class="progress-line"><div id="progress-fill"></div></div>
-        <div id="tactical-pause" class="tactical-pause">ENCRYPTING DATA...</div>
-        <div id="game-ui">
-            <div id="display-area"></div>
-            <div id="options-area"></div>
+    <div id="app-container">
+        <div id="screen-login" class="card">
+            <h1 class="logo">SCRIPTORIUM</h1>
+            <p class="tagline">PHASE I: THE AWAKENING</p>
+            <input type="password" id="pass-input" placeholder="Enter Codex Key">
+            <button onclick="unlock()">UNSEAL ARCHIVES</button>
         </div>
-        <div id="dossier" class="dossier-text"></div>
+
+        <div id="screen-game" class="card" style="display:none">
+            <div class="trackers">
+                <div class="track-item"><span>CURRENT ACT</span><span id="act-pct">0%</span></div>
+                <div class="bar-bg"><div id="act-fill" class="bar-fill"></div></div>
+                <div class="track-item"><span>CHAPTER 1</span><span id="chap-pct">0%</span></div>
+                <div class="bar-bg"><div id="chap-fill" class="bar-fill"></div></div>
+                <div class="track-item"><span>CAMPAIGN</span><span id="camp-pct">0%</span></div>
+                <div class="bar-bg"><div id="camp-fill" class="bar-fill"></div></div>
+            </div>
+
+            <div id="status-update" class="status-msg">SCANNING MANUSCRIPT...</div>
+
+            <div id="game-content">
+                <div id="instruction-text"></div>
+                <div id="display-area"></div>
+                <div id="options-area"></div>
+            </div>
+
+            <div id="dossier-scroll" class="dossier">
+                <h4 class="dossier-title">📂 INTELLIGENCE DOSSIER</h4>
+                <div id="dossier-content"></div>
+            </div>
+        </div>
+
+        <div id="screen-success" class="card" style="display:none">
+            <h2 class="gold-text">CHAPTER SEALED</h2>
+            <div id="leaderboard" class="leaderboard"></div>
+            <button onclick="location.reload()">RE-INITIALIZE TRAINING</button>
+        </div>
     </div>
-
-    <div id="screen-success" class="card" style="display:none">
-        <h2 style="color:var(--gold)">HONOR GRADUATE</h2>
-        <div id="leaderboard" style="text-align:left; margin: 20px 0;"></div>
-        <button onclick="location.reload()">RE-INITIALIZE</button>
-    </div>
-</div>
-
-<script>
-    const PASS = "VentureIntoGreek";
-    let state = { act: 1, step: 0, xp: 0, dossier: [] };
-
-    const crawl = [
-        { q: "Χριστός", a: "Christ", c: "Easy win. Stay calm." },
-        { q: "βάπτισμα", a: "Baptism", c: "Sound it out. B... P..." },
-        { q: "ἄγγελος", a: "Angel", c: "Messenger. Not an angle." },
-        { q: "ν", a: "n", c: "MEDIC ALERT: Looks like 'v', sounds like 'n'." },
-        { q: "λόγος", a: "Word", c: "The Logic behind the universe." }
-    ];
-
-    const walk = [
-        { q: "θεός", a: "God", d: "<b>Article Logic:</b> Missing 'the' in John 1:1 identifies nature, not person." },
-        { q: "ἀλήθεια", a: "Truth", d: "<b>Certainty:</b> In Luke 1:4, Truth is a 'safety cable' (asphaleia)." }
-    ];
-
-    function unlock() {
-        if(document.getElementById('pass-input').value === PASS) {
-            document.getElementById('screen-login').style.display = 'none';
-            document.getElementById('screen-game').style.display = 'block';
-            run();
-        }
-    }
-
-    function run() {
-        const display = document.getElementById('display-area');
-        const opts = document.getElementById('options-area');
-        const fill = document.getElementById('progress-fill');
-        const pause = document.getElementById('tactical-pause');
-        
-        display.innerHTML = ''; opts.innerHTML = ''; pause.style.display = 'none';
-
-        let db = (state.act === 1) ? crawl : walk;
-        let item = db[state.step];
-        fill.style.width = (state.step / db.length) * 100 + "%";
-
-        display.innerHTML = `<div class="word-display">${item.q}</div><p style="font-size:0.8rem; color:#999;">${item.c || "Master the vitals."}</p>`;
-        
-        let choices = [item.a, "Life", "Earth", "Water"].sort(() => Math.random() - 0.5);
-        choices.forEach(c => {
-            let b = document.createElement('button');
-            b.innerText = c;
-            b.onclick = () => check(c === item.a);
-            opts.appendChild(b);
-        });
-    }
-
-    function check(correct) {
-        if(!correct) { alert("Negative. Re-evaluate."); return; }
-        
-        const opts = document.getElementById('options-area');
-        const pause = document.getElementById('tactical-pause');
-        opts.innerHTML = ''; 
-        pause.style.display = 'block';
-
-        // TACTICAL PAUSE: Forces the user to wait and process
-        setTimeout(() => {
-            let db = (state.act === 1) ? crawl : walk;
-            if(state.act === 2) { state.dossier.push(db[state.step].d); showDossier(); }
-            state.step++;
-            if(state.step >= db.length) {
-                state.act++; state.step = 0;
-                if(state.act > 2) { showLeaderboard(); } else { run(); }
-            } else { run(); }
-        }, 1500); // 1.5 second "Slow is Smooth" barrier
-    }
-
-    function showDossier() {
-        const d = document.getElementById('dossier');
-        d.style.display = 'block';
-        d.innerHTML = "<b>📂 DOSSIER UNLOCKED:</b><br>" + state.dossier.join("<br><br>");
-    }
-
-    function showLeaderboard() {
-        document.getElementById('screen-game').style.display = 'none';
-        document.getElementById('screen-success').style.display = 'block';
-        const board = document.getElementById('leaderboard');
-        const players = [
-            {n: "Timothy", x: 2500}, {n: "Lydia", x: 2100}, {n: "YOU", x: 1950},
-            {n: "Silas", x: 1800}, {n: "Phoebe", x: 1500}, {n: "Titus", x: 1200}
-        ];
-        players.forEach((p, i) => {
-            board.innerHTML += `<div class="leaderboard-row ${p.n === 'YOU' ? 'user-row' : ''}">
-                <span>${i+1}. ${p.n}</span><span>${p.x} XP</span>
-            </div>`;
-        });
-    }
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
