@@ -3,49 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCRIPTORIUM</title>
+    <title>THE CODEX</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app-container">
-        <div class="trackers">
-            <div class="track-row"><span>ACT</span><div class="bar"><div id="act-bar" class="fill"></div></div></div>
-            <div class="track-row"><span>CHAPTER</span><div class="bar"><div id="chap-bar" class="fill"></div></div></div>
-            <div class="track-row"><span>GAME</span><div class="bar"><div id="game-bar" class="fill"></div></div></div>
+        <nav id="codex-nav" class="hidden">
+            <button onclick="changeAct(1)">I</button>
+            <button onclick="changeAct(2)">II</button>
+            <button onclick="changeAct(3)">III</button>
+            <button onclick="window.location.href='library.html'">ARSENAL</button>
+        </nav>
+
+        <div id="hud" class="hidden">
+            <div class="hud-row"><span>ACT</span><div class="track"><div id="bar-act" class="fill"></div></div></div>
+            <div class="hud-row"><span>CHAP</span><div class="track"><div id="bar-chap" class="fill"></div></div></div>
+            <div class="hud-row"><span>GAME</span><div class="track"><div id="bar-game" class="fill"></div></div></div>
         </div>
 
         <div id="screen-login" class="card">
-            <h1 class="logo">SCRIPTORIUM</h1>
-            <input type="password" id="pass-input" placeholder="CODEX KEY">
-            <button onclick="unlock()">UNSEAL ARCHIVES</button>
+            <h1 class="ink-logo">THE CODEX</h1>
+            <input type="password" id="pass" placeholder="KEY">
+            <button class="btn-enter" onclick="enter()">ENTER</button>
         </div>
 
         <div id="screen-game" class="card" style="display:none">
-            <div id="character-stage">
-                <div id="char-icon">🦉</div>
-                <div id="chat-bubble" class="bubble">"Let's get your eyes adjusted, Recruit."</div>
+            <div id="stage">
+                <div id="char-portrait"></div>
+                <div id="chat-bubble" class="bubble"></div>
             </div>
 
-            <div id="display-container">
-                <div id="speaker-icon" onclick="speakCurrent()">🔊</div>
-                <div id="greek-display" class="huge-greek"></div>
+            <div id="display-zone">
+                <div id="speaker-hitbox" onclick="speak()">
+                    <div id="speaker-icon">(( 🔊 ))</div>
+                </div>
+                <div id="greek-main" class="massive-ink"></div>
             </div>
 
-            <div id="interaction-zone"></div>
-            
-            <div id="nav-bar" class="hidden">
-                <button onclick="switchAct(1)">ACT I</button>
-                <button onclick="switchAct(2)">ACT II</button>
-                <button onclick="window.location.href='library.html'">LEXICON</button>
-            </div>
+            <div id="interaction-grid"></div>
         </div>
 
-        <div id="screen-donation" class="card" style="display:none">
-            <h2 class="gold-text">CHAPTER 1 SEALED</h2>
-            <p>You have reclaimed the first layer of the truth. This nonprofit is built on the belief that everyone should have access to these texts.</p>
-            <div id="qr-placeholder"><img src="qr_placeholder.png" style="width:150px;"></div>
-            <p class="small">Support ongoing operations in Greek, Hebrew, and Latin education.</p>
-            <button onclick="location.reload()">CONTINUE JOURNEY</button>
+        <div id="screen-end" class="card" style="display:none">
+            <h2 class="gold">CODEX SEALED</h2>
+            <p id="final-pitch"></p>
+            <div id="qr-code">(( QR CODE ))</div>
+            <button onclick="location.reload()">RE-INITIALIZE</button>
         </div>
     </div>
     <script src="script.js"></script>
