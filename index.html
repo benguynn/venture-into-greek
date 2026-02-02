@@ -7,47 +7,40 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="app-container">
-        <nav id="codex-nav" class="hidden">
-            <button onclick="changeAct(1)">I</button>
-            <button onclick="changeAct(2)">II</button>
-            <button onclick="changeAct(3)">III</button>
-            <button onclick="window.location.href='library.html'">ARSENAL</button>
-        </nav>
-
-        <div id="hud" class="hidden">
-            <div class="hud-row"><span>ACT</span><div class="track"><div id="bar-act" class="fill"></div></div></div>
-            <div class="hud-row"><span>CHAP</span><div class="track"><div id="bar-chap" class="fill"></div></div></div>
-            <div class="hud-row"><span>GAME</span><div class="track"><div id="bar-game" class="fill"></div></div></div>
+    <div id="ambient-bg"></div> <div id="app-container">
+        <div id="screen-login" class="parchment">
+            <h1 class="ink-title">CODEX</h1>
+            <input type="password" id="pass" placeholder="VIG">
+            <button class="btn-minimal" onclick="enter()">ENTER</button>
         </div>
 
-        <div id="screen-login" class="card">
-            <h1 class="ink-logo">THE CODEX</h1>
-            <input type="password" id="pass" placeholder="KEY">
-            <button class="btn-enter" onclick="enter()">ENTER</button>
-        </div>
-
-        <div id="screen-game" class="card" style="display:none">
-            <div id="stage">
-                <div id="char-portrait"></div>
-                <div id="chat-bubble" class="bubble"></div>
+        <div id="screen-game" class="parchment" style="display:none">
+            <div id="character-zone">
+                <div id="char-sprite"></div>
+                <div id="chat-bubble" class="ink-bubble"></div>
             </div>
 
-            <div id="display-zone">
-                <div id="speaker-hitbox" onclick="speak()">
-                    <div id="speaker-icon">(( 🔊 ))</div>
-                </div>
-                <div id="greek-main" class="massive-ink"></div>
-            </div>
+            <div id="word-vault">
+                <div id="greek-main" class="ink-main"></div>
+                <div id="speaker-seal" onclick="speakCurrent()"></div> </div>
 
             <div id="interaction-grid"></div>
         </div>
 
-        <div id="screen-end" class="card" style="display:none">
-            <h2 class="gold">CODEX SEALED</h2>
-            <p id="final-pitch"></p>
-            <div id="qr-code">(( QR CODE ))</div>
-            <button onclick="location.reload()">RE-INITIALIZE</button>
+        <div id="screen-summary" class="parchment" style="display:none">
+            <h2 id="summary-title">ACT SEALED</h2>
+            <div class="visual-progress">
+                <p>CHAPTER MASTERY</p>
+                <div class="progress-ring-container">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" class="ring-bg"></circle>
+                        <circle cx="50" cy="50" r="45" id="progress-ring" class="ring-fill"></circle>
+                    </svg>
+                    <div id="pct-label">0%</div>
+                </div>
+            </div>
+            <div id="summary-intel"></div>
+            <button class="btn-minimal" onclick="resume()">PROCEED</button>
         </div>
     </div>
     <script src="script.js"></script>
