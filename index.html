@@ -5,71 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Venture Into Greek</title>
     <style>
-        :root {
-            --slate: #2C3E50;
-            --gold: #D4AF37;
-            --paper: #F4F4F4;
-            --white: #FFFFFF;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--paper);
-            color: var(--slate);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        #app-container {
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .card {
-            background: var(--white);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .manifesto {
-            font-style: italic;
-            font-size: 0.9rem;
-            border-left: 3px solid var(--gold);
-            padding-left: 15px;
-            margin: 20px 0;
-            text-align: left;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 15px 0;
-            border: 2px solid var(--slate);
-            border-radius: 6px;
-        }
-        button {
-            background-color: var(--slate);
-            color: var(--white);
-            border: none;
-            padding: 15px 30px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-        }
-        .apologetic-icon {
-            color: var(--gold);
-            font-weight: bold;
-            cursor: help;
-            border: 1px solid var(--gold);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: inline-block;
-            font-size: 0.8rem;
-        }
+        :root { --slate: #2C3E50; --gold: #D4AF37; --paper: #F4F4F4; --white: #FFFFFF; }
+        body { font-family: sans-serif; background-color: var(--paper); color: var(--slate); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        #app-container { width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; }
+        .card { background: var(--white); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; margin-bottom: 20px; }
+        .manifesto { font-style: italic; font-size: 0.9rem; border-left: 3px solid var(--gold); padding-left: 15px; margin: 20px 0; text-align: left; line-height: 1.5; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid var(--slate); border-radius: 6px; box-sizing: border-box; }
+        button { background-color: var(--slate); color: var(--white); border: none; padding: 15px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; font-size: 1rem; }
+        .btn-gold { background-color: var(--gold); }
+        .apologetic-box { background: #fffde7; border: 1px solid var(--gold); border-radius: 8px; padding: 10px; margin-top: 15px; font-size: 0.85rem; text-align: left; display: none; }
+        .icon-btn { display: inline-block; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold); line-height: 24px; margin: 0 5px; cursor: pointer; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -77,63 +22,105 @@
 <div id="app-container">
     <div id="login-screen" class="card">
         <h2 style="color: var(--gold)">Codex Key Required</h2>
-        <p>This is the Venture Church Underground Scriptorium.</p>
+        <p>Venture Church Underground Scriptorium</p>
         <input type="password" id="password-input" placeholder="Enter Password">
         <button onclick="checkPassword()">Unlock Access</button>
     </div>
 
     <div id="main-screen" class="card" style="display:none">
-        <h2>Welcome to the Deep</h2>
+        <h2 style="color: var(--slate)">Venture Into Greek</h2>
         <div class="manifesto">
             "I built this app to empower you to read the original New Testament text for yourself, because truth is something you work toward, not something you inherit."
         </div>
         <button onclick="startDrill()">Start Weeks 1-3 Triage</button>
-        <hr>
-        <button style="background: var(--gold)" onclick="showFeedback()">Tactical Comms (Feedback)</button>
+        <button class="btn-gold" onclick="showFeedback()">Tactical Comms (Feedback)</button>
     </div>
 
     <div id="drill-screen" class="card" style="display:none">
-        <h3>Mastery Meter: <span id="score">0</span>%</h3>
-        <p id="greek-word" style="font-size: 2.5rem;">θεός</p>
-        <div id="options">
-            <button onclick="handleAnswer(true)" style="margin-bottom:10px">God</button>
-            <button onclick="handleAnswer(false)">Word</button>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 10px;">
+            <span>Mastery: <b id="score">0</b>%</span>
+            <span>Accuracy Required</span>
         </div>
-        <p><span class="apologetic-icon">!</span> <i>Hint: Notice the Article logic here.</i></p>
+        <div id="drill-content">
+            <p id="greek-display" style="font-size: 2.5rem; margin: 20px 0;"></p>
+            <div id="options-container"></div>
+            
+            <div style="margin-top: 20px;">
+                <span class="icon-btn" onclick="toggleHint('cert')">!</span>
+                <span class="icon-btn" onclick="toggleHint('ms')">🛡</span>
+                <span class="icon-btn" onclick="toggleHint('gram')">#</span>
+            </div>
+            
+            <div id="hint-cert" class="apologetic-box"><b>Certainty:</b> This word in Luke 1:4 refers to a 'safety cable'—verified historical data you can lean your whole weight on.</div>
+            <div id="hint-ms" class="apologetic-box"><b>Manuscripts:</b> This name appears identically across 5,000+ early fragments. The identity was never 'edited.'</div>
+            <div id="hint-gram" class="apologetic-box"><b>Article Logic:</b> Notice the absence of 'the.' This defines the nature of the Subject without confusing the Person.</div>
+        </div>
     </div>
 </div>
 
 <script>
     const PASS = "VentureIntoGreek";
-    
+    const vocab = [
+        { g: "θεός", e: "God", hint: "gram" },
+        { g: "λόγος", e: "Word", hint: "cert" },
+        { g: "Ἰησοῦς", e: "Jesus", hint: "ms" },
+        { g: "ἀλήθεια", e: "Truth", hint: "cert" },
+        { g: "βασιλεία", e: "Kingdom", hint: "ms" },
+        { g: "εὐαγγέλιον", e: "Gospel", hint: "cert" }
+    ];
+    let currentIndex = 0;
+    let score = 0;
+
     function checkPassword() {
-        const input = document.getElementById('password-input').value;
-        if(input === PASS) {
+        if(document.getElementById('password-input').value === PASS) {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-screen').style.display = 'block';
-        } else {
-            alert("Key invalid. Keep drilling.");
-        }
+        } else { alert("Key invalid."); }
     }
 
     function startDrill() {
         document.getElementById('main-screen').style.display = 'none';
         document.getElementById('drill-screen').style.display = 'block';
+        loadQuestion();
     }
 
-    function handleAnswer(isCorrect) {
-        if(isCorrect) {
-            alert("Correct. Accuracy +10.");
-            // Logic for communal bar and SmartScore goes here in next update
-        } else {
-            alert("Incorrect. Triage required.");
-        }
+    function loadQuestion() {
+        const item = vocab[currentIndex];
+        document.getElementById('greek-display').innerText = item.g;
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        
+        // Shuffle simple options
+        let choices = [item.e, vocab[(currentIndex + 1) % vocab.length].e].sort();
+        choices.forEach(choice => {
+            const btn = document.createElement('button');
+            btn.innerText = choice;
+            btn.style.marginBottom = "10px";
+            btn.onclick = () => checkAnswer(choice === item.e);
+            container.appendChild(btn);
+        });
+        // Hide hints
+        document.querySelectorAll('.apologetic-box').forEach(b => b.style.display = 'none');
+    }
+
+    function checkAnswer(correct) {
+        if(correct) {
+            score += Math.floor(100/vocab.length);
+            document.getElementById('score').innerText = score;
+            currentIndex++;
+            if(currentIndex < vocab.length) { loadQuestion(); }
+            else { alert("Mastery Achieved for Weeks 1-3!"); location.reload(); }
+        } else { alert("Triage required. Look at the icons for a hint."); }
+    }
+
+    function toggleHint(type) {
+        document.querySelectorAll('.apologetic-box').forEach(b => b.style.display = 'none');
+        document.getElementById('hint-' + type).style.display = 'block';
     }
 
     function showFeedback() {
-        window.location.href = "mailto:your-email@example.com?subject=Scriptorium%20Feedback&body=(Dictate your message here using your phone's microphone icon)";
+        window.location.href = "mailto:benguynn@gmail.com?subject=VentureFeedback&body=(Use your mic icon to leave feedback)";
     }
 </script>
-
 </body>
 </html>
