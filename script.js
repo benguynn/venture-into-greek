@@ -1,95 +1,117 @@
 localStorage.clear();
 
-const STATE = { act: 1, step: 0, total: 0, currentWord: "" };
+const CODEX_KEY = "VIG";
+let state = { act: 1, step: 0, total: 0, current: null, char: null };
 
-const ACT1_LESSONS = [
-    { type: 'observe', q: "Χριστός", a: "Χ", p: "Touch the letter that looks like an 'X'. It sounds like 'CH'." },
-    { type: 'match', q: "Χριστός", a: "Christ", p: "Now find the English match for 'Christos'." },
-    { type: 'observe', q: "ν", a: "n", p: "This is the 'nu'. It looks like a 'v', but sounds like 'n'ail." }
+// ENSEMBLE CAST
+const CAST = {
+    ptolemy: { icon: "🦉", name: "Ptolemy" },
+    pensive: { icon: "📜", name: "The Scribe" },
+    celsus: { icon: "🗡️", name: "Celsus" }
+};
+
+// DATA BANK (Acts 1 & 2)
+const DATA = [
+    { q: "ἀγάπη", a: "love", why: "Why Greek? Because 'love' is too broad in English. Agape is the specific, sacrificial choice of the cross.", m: "My mouth hung agape as the love of my life walked down the aisle." },
+    { q: "ζωή", a: "life", why: "The New Testament uses Zoe for eternal life—the kind of life that never ends.", m: "The zoo is full of life." },
+    { q: "ν", a: "n", why: "Accuracy matters. Misreading one letter can change the mission profile.", m: "Looks like 'v', sounds like 'n'ail." },
+    { q: "θεότης", a: "deity", why: "Recognizing roots (θε-) helps you see the nature of the person being described.", m: "Built on God (θεός)." }
 ];
 
-const ACT2_ROOTS = [
-    { q: "θεός", a: "God", p: "The root of Theology." },
-    { q: "θεότης", a: "Deity", p: "This is the nature of God (from Act 1)." }
-];
-
-function unlock() {
-    if(document.getElementById('pass-input').value === "VentureIntoGreek") {
+function enter() {
+    if(document.getElementById('pass').value === CODEX_KEY) {
         document.getElementById('screen-login').style.display = 'none';
         document.getElementById('screen-game').style.display = 'block';
-        render();
+        document.getElementById('hud').classList.remove('hidden');
+        loadQuestion();
     }
 }
 
-function render() {
-    const display = document.getElementById('greek-display');
-    const zone = document.getElementById('interaction-zone');
+function loadQuestion() {
+    const display = document.getElementById('greek-main');
+    const grid = document.getElementById('interaction-grid');
     const bubble = document.getElementById('chat-bubble');
+    const port = document.getElementById('char-portrait');
     
-    display.innerHTML = ''; zone.innerHTML = ''; display.className = "huge-greek";
-    
-    let db = (STATE.act === 1) ? ACT1_LESSONS : ACT2_ROOTS;
-    let item = db[STATE.step % db.length];
-    STATE.currentWord = item.q;
-    
-    bubble.innerText = item.p;
-    display.innerText = item.q;
+    grid.innerHTML = ''; display.classList.remove('breathing');
+    state.current = DATA[Math.floor(Math.random() * DATA.length)];
 
-    // Start breathing if idle
-    let idleTimer = setTimeout(() => display.classList.add('breathing'), 5000);
-
-    // Varied Interactivity
-    if(item.type === 'observe') {
-        item.q.split('').forEach(char => {
-            let b = document.createElement('button');
-            b.innerText = char;
-            b.onclick = () => { clearTimeout(idleTimer); check(char === item.a); };
-            zone.appendChild(b);
-        });
-    } else {
-        let choices = [item.a, "Life", "Grace"].sort(() => Math.random() - 0.5);
-        choices.forEach(c => {
-            let b = document.createElement('button');
-            b.innerText = c;
-            b.onclick = () => { clearTimeout(idleTimer); check(c === item.a); };
-            zone.appendChild(b);
+    // QUESTION ROTATION (3 WAYS)
+    let type = Math.floor(Math.random() * 3);
+    if(type === 0) { // MATCH
+        display.innerText = state.current.q;
+        setChoices([state.current.a, "world", "sin", "power"]);
+    } else if (type === 1) { // REVERSE
+        display.innerText = state.current.a.toUpperCase();
+        setChoices([state.current.q, "λόγος", "φῶς", "γῆ"]);
+    } else { // TARGET ID
+        display.innerText = state.current.q;
+        state.current.q.split('').forEach(char => {
+            createBtn(char, char === state.current.q[0]); // Simple ID for now
         });
     }
-    updateBars();
-}
 
-function check(correct) {
-    if(!correct) return;
-    STATE.step++; STATE.total++;
-    
-    // FUNDRAISER ASK LOGIC
-    if(STATE.total === 12) triggerAsk(1);
-    if(STATE.total === 24) triggerAsk(2);
-
-    if(STATE.step >= 12 && STATE.act === 1) document.getElementById('nav-bar').classList.remove('hidden');
-    
-    setTimeout(render, 800);
-}
-
-function triggerAsk(num) {
-    const bubble = document.getElementById('chat-bubble');
-    if(num === 1) {
-        bubble.innerText = "You're getting it! Reclaiming the Word is a team effort. Check out how you can help us grow!";
-    } else if(num === 2) {
-        bubble.innerText = "Mastery is building! Consider a gift to help us preserve these texts for the next generation.";
+    // ENSEMBLE LOGIC
+    if(state.total % 4 === 0) {
+        state.char = CAST.ptolemy;
+        showBubble(state.current.m);
+    } else if (state.total % 7 === 0) {
+        state.char = CAST.celsus;
+        showBubble("Are you sure? This ink looks like it's been smudged by time.");
     }
+
+    // BREATHING TRIGGER
+    setTimeout(() => { if(grid.innerHTML !== '') display.classList.add('breathing'); }, 6000);
 }
 
-function speakCurrent() {
-    let msg = new SpeechSynthesisUtterance(STATE.currentWord);
+function setChoices(arr) {
+    let pool = shuffle(arr);
+    pool.forEach(c => createBtn(c, c === state.current.a || c === state.current.q));
+}
+
+function createBtn(txt, correct) {
+    const b = document.createElement('button');
+    b.innerText = txt;
+    b.onclick = () => { if(correct) next(); else flashError(); };
+    document.getElementById('interaction-grid').appendChild(b);
+}
+
+function next() {
+    state.step++; state.total++;
+    updateHUD();
+
+    // FUNDRAISER SCALE
+    if(state.total === 12) showAsk(1);
+    if(state.total === 24) showAsk(2);
+    if(state.total === 48) { document.getElementById('screen-game').style.display = 'none'; document.getElementById('screen-end').style.display = 'block'; }
+    
+    if(state.step >= 12) document.getElementById('codex-nav').classList.remove('hidden');
+    loadQuestion();
+}
+
+function showAsk(lvl) {
+    if(lvl === 1) showBubble("You’re reclaiming the Word. Help us keep the archives open for everyone?");
+    if(lvl === 2) showBubble("The mission is expanding. Your support helps us build the Hebrew and Latin vaults.");
+}
+
+function showBubble(txt) {
+    const b = document.getElementById('chat-bubble');
+    const p = document.getElementById('char-portrait');
+    b.innerText = txt; b.style.display = "block";
+    p.innerText = state.char.icon;
+}
+
+function speak() {
+    let msg = new SpeechSynthesisUtterance(state.current.q);
     msg.lang = 'el-GR';
+    window.speechSynthesis.cancel(); // Fix audio lock
     window.speechSynthesis.speak(msg);
 }
 
-function updateBars() {
-    document.getElementById('act-bar').style.width = (STATE.step / 15) * 100 + "%";
-    document.getElementById('chap-bar').style.width = (STATE.total / 48) * 100 + "%";
-    document.getElementById('game-bar').style.width = "2%";
+function updateHUD() {
+    document.getElementById('bar-act').style.width = (state.step / 15) * 100 + "%";
+    document.getElementById('bar-chap').style.width = (state.total / 48) * 100 + "%";
 }
 
-function switchAct(num) { STATE.act = num; STATE.step = 0; render(); }
+function shuffle(a) { return a.sort(() => Math.random() - 0.5); }
+function flashError() { document.body.style.background = "#300"; setTimeout(()=>document.body.style.background="#000", 200); }
