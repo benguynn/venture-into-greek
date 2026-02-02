@@ -1,69 +1,84 @@
-const VAULT = [
-    { q: "ἀλήθεια", a: "truth", why: "[Smuggler] Pilate stood before the 'Aletheia' (Truth) and didn't recognize it." },
-    { q: "λόγος", a: "word", why: "[Patron] The divine 'Logos' (Logic) that sustains the universe." },
-    { q: "ζωή", a: "life", why: "[Scribe] Zoe is more than biological; it is the life of the Resurrection." }
-];
+let vaultData = [];
+let state = { step: 0, current: null };
 
-let state = { step: 0, total: 0, current: null };
+async function initVault() {
+    try {
+        const res = await fetch('vault.json');
+        vaultData = await res.json();
+        document.getElementById('screen-loader').style.opacity = '0';
+        setTimeout(() => document.getElementById('screen-loader').style.display = 'none', 800);
+        showScreen('screen-menu');
+    } catch (e) {
+        alert("Silo connection error. Verify vault.json is present.");
+    }
+}
 
 function showScreen(id) {
-    document.getElementById('snd-paper').play();
+    playSound('snd-paper');
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     if(id === 'screen-map') renderMap();
-    if(id === 'screen-game') loadGame();
+    if(id === 'screen-game') nextLesson();
 }
 
 function renderMap() {
-    const grid = document.getElementById('chapter-grid'); grid.innerHTML = '';
+    const grid = document.getElementById('chapter-grid');
+    grid.innerHTML = '';
     for(let i=1; i<=36; i++) {
-        const node = document.createElement('div');
-        node.className = `chap-node ${i > 1 ? 'locked' : ''}`;
-        node.innerText = i;
-        if(i === 1) node.onclick = () => showScreen('screen-game');
-        grid.appendChild(node);
+        const btn = document.createElement('button');
+        btn.innerText = i;
+        btn.className = i > 1 ? 'locked' : '';
+        btn.onclick = () => i === 1 ? showScreen('screen-game') : null;
+        grid.appendChild(btn);
     }
 }
 
-function loadGame() {
-    const display = document.getElementById('greek-display');
-    const zone = document.getElementById('interaction-braid');
+function nextLesson() {
+    state.current = vaultData[state.step % vaultData.length];
+    const display = document.getElementById('ink-display');
+    const braid = document.getElementById('interaction-braid');
     const bubble = document.getElementById('chat-bubble');
     
-    zone.innerHTML = '';
-    state.current = VAULT[state.step % VAULT.length];
+    braid.innerHTML = '';
     display.innerText = state.current.q;
     bubble.innerText = state.current.why;
-
+    
     let chars = state.current.q.split('');
     let shuffled = [...chars].sort(() => Math.random() - 0.5);
-
+    
     shuffled.forEach(c => {
-        const b = document.createElement('button');
-        b.innerText = c;
-        b.onclick = () => {
+        const btn = document.createElement('button');
+        btn.innerText = c;
+        btn.onclick = () => {
             if(c === chars[0]) {
-                document.getElementById('snd-ink').play();
+                playSound('snd-ink');
                 chars.shift();
-                b.style.visibility = 'hidden';
-                if(chars.length === 0) { state.step++; state.total++; checkProgress(); }
+                btn.style.opacity = '0.1';
+                btn.disabled = true;
+                if(chars.length === 0) {
+                    state.step++;
+                    setTimeout(nextLesson, 600);
+                }
             } else {
-                document.getElementById('app-container').classList.add('shake');
-                setTimeout(() => document.getElementById('app-container').classList.remove('shake'), 400);
-                if(navigator.vibrate) navigator.vibrate(100);
+                triggerError();
             }
         };
-        zone.appendChild(b);
+        braid.appendChild(btn);
     });
 }
 
-function checkProgress() {
-    if(state.step >= 3) {
-        showScreen('screen-summary');
-        const ring = document.getElementById('progress-ring');
-        ring.style.strokeDashoffset = 283 - (283 * 0.1); // Placeholder 10%
-        document.getElementById('pct-label').innerText = "10%";
-    } else {
-        loadGame();
-    }
+function playSound(id) {
+    const s = document.getElementById(id);
+    s.currentTime = 0;
+    s.play().catch(()=>{});
+}
+
+function triggerError() {
+    document.body.classList.add('shake');
+    if(navigator.vibrate) navigator.vibrate(80);
+    setTimeout(() => document.body.classList.remove('shake'), 400);
+}
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
 }
