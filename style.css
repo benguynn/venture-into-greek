@@ -1,82 +1,82 @@
 :root {
-    --slate: #1A252F;
-    --gold: #C5A059;
-    --parchment: #F4F1EA;
+    --slate: #121A21;
+    --gold: #D4AF37;
+    --gold-glow: rgba(212, 175, 55, 0.4);
+    --parchment: #FDFBF7;
     --white: #FFFFFF;
-    --shadow: rgba(0, 0, 0, 0.08);
 }
 
 body {
-    background-color: var(--parchment);
+    background: radial-gradient(circle, #2c3e50 0%, #000000 100%);
     color: var(--slate);
     font-family: 'Georgia', serif;
     margin: 0;
     display: flex;
     justify-content: center;
+    align-items: center;
     min-height: 100vh;
 }
 
-#app-container {
-    width: 100%;
-    max-width: 480px;
-    padding: 20px;
-}
+#app-container { width: 100%; max-width: 500px; padding: 15px; }
 
 .card {
-    background: var(--white);
-    padding: 35px;
-    border-radius: 20px;
-    box-shadow: 0 12px 40px var(--shadow);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 40px 30px;
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    border: 1px solid var(--gold);
     text-align: center;
-    border: 1px solid rgba(197, 160, 89, 0.2);
 }
 
-.logo { color: var(--gold); letter-spacing: 4px; margin-bottom: 5px; }
-.tagline { font-size: 0.6rem; letter-spacing: 3px; color: #999; margin-bottom: 30px; }
-
-/* PROGRESS TRACKERS */
-.trackers { margin-bottom: 25px; text-align: left; }
-.track-item { display: flex; justify-content: space-between; font-size: 0.6rem; font-weight: bold; color: #aaa; letter-spacing: 1px; margin-top: 8px; }
-.bar-bg { width: 100%; height: 4px; background: #eee; border-radius: 10px; margin-top: 2px; }
-.bar-fill { height: 100%; background: var(--gold); width: 0%; transition: 1s ease-in-out; }
-
-.word-display { font-size: 3.5rem; font-weight: bold; margin: 30px 0; animation: fadeIn 0.8s; }
-.verse-text { font-size: 1.5rem; line-height: 2.2; text-align: left; margin: 20px 0; }
-
-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 20px; text-align: center; box-sizing: border-box; }
-
-button {
-    background: var(--slate);
-    color: white;
-    border: none;
-    padding: 18px;
-    border-radius: 12px;
-    cursor: pointer;
+/* THE MASSIVE GREEK */
+.huge-greek {
+    font-size: 5rem;
     font-weight: bold;
+    color: var(--slate);
+    margin: 40px 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    animation: pulseText 2s infinite ease-in-out;
+}
+
+/* VISUALLY STUNNING TRACKERS */
+.bar-bg {
     width: 100%;
-    margin-top: 10px;
-    font-size: 1rem;
-    transition: 0.2s;
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 5px 0 15px 0;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
-button:disabled { opacity: 0.3; }
-
-.status-msg { color: var(--gold); font-size: 0.7rem; font-weight: bold; letter-spacing: 2px; display: none; margin-bottom: 15px; }
-
-.dossier {
-    background: var(--slate);
-    color: #eee;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: left;
-    margin-top: 25px;
-    display: none;
-    border-left: 4px solid var(--gold);
-    line-height: 1.6;
-    font-size: 0.85rem;
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), #f1c40f);
+    box-shadow: 0 0 15px var(--gold-glow);
+    width: 0%;
+    transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.leaderboard-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
-.user-row { background: #fffde7; font-weight: bold; }
+/* CUSTOM MODAL UI */
+#modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000; transition: 0.3s;
+}
+.modal-hide { opacity: 0; pointer-events: none; }
+.modal-card {
+    background: var(--white);
+    padding: 30px; border-radius: 20px; width: 85%; max-width: 400px;
+    border: 2px solid var(--gold);
+}
 
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+.btn-gold { background: var(--gold); color: white; }
+button {
+    padding: 18px; border-radius: 12px; border: none; font-weight: bold;
+    width: 100%; margin-top: 10px; cursor: pointer; transition: 0.2s;
+}
+
+@keyframes pulseText { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
