@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venture Into Greek</title>
+    <style>
+        :root {
+            --slate: #2C3E50;
+            --gold: #D4AF37;
+            --paper: #F4F4F4;
+            --white: #FFFFFF;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--paper);
+            color: var(--slate);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #app-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .manifesto {
+            font-style: italic;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--gold);
+            padding-left: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid var(--slate);
+            border-radius: 6px;
+        }
+        button {
+            background-color: var(--slate);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+        .apologetic-icon {
+            color: var(--gold);
+            font-weight: bold;
+            cursor: help;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div id="login-screen" class="card">
+        <h2 style="color: var(--gold)">Codex Key Required</h2>
+        <p>This is the Venture Church Underground Scriptorium.</p>
+        <input type="password" id="password-input" placeholder="Enter Password">
+        <button onclick="checkPassword()">Unlock Access</button>
+    </div>
+
+    <div id="main-screen" class="card" style="display:none">
+        <h2>Welcome to the Deep</h2>
+        <div class="manifesto">
+            "I built this app to empower you to read the original New Testament text for yourself, because truth is something you work toward, not something you inherit."
+        </div>
+        <button onclick="startDrill()">Start Weeks 1-3 Triage</button>
+        <hr>
+        <button style="background: var(--gold)" onclick="showFeedback()">Tactical Comms (Feedback)</button>
+    </div>
+
+    <div id="drill-screen" class="card" style="display:none">
+        <h3>Mastery Meter: <span id="score">0</span>%</h3>
+        <p id="greek-word" style="font-size: 2.5rem;">θεός</p>
+        <div id="options">
+            <button onclick="handleAnswer(true)" style="margin-bottom:10px">God</button>
+            <button onclick="handleAnswer(false)">Word</button>
+        </div>
+        <p><span class="apologetic-icon">!</span> <i>Hint: Notice the Article logic here.</i></p>
+    </div>
+</div>
+
+<script>
+    const PASS = "VentureIntoGreek";
+    
+    function checkPassword() {
+        const input = document.getElementById('password-input').value;
+        if(input === PASS) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'block';
+        } else {
+            alert("Key invalid. Keep drilling.");
+        }
+    }
+
+    function startDrill() {
+        document.getElementById('main-screen').style.display = 'none';
+        document.getElementById('drill-screen').style.display = 'block';
+    }
+
+    function handleAnswer(isCorrect) {
+        if(isCorrect) {
+            alert("Correct. Accuracy +10.");
+            // Logic for communal bar and SmartScore goes here in next update
+        } else {
+            alert("Incorrect. Triage required.");
+        }
+    }
+
+    function showFeedback() {
+        window.location.href = "mailto:your-email@example.com?subject=Scriptorium%20Feedback&body=(Dictate your message here using your phone's microphone icon)";
+    }
+</script>
+
+</body>
+</html>
