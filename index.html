@@ -7,52 +7,39 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="ambient-bg"></div>
+    <div id="ambient-vault"></div>
 
     <div id="screen-intro" class="overlay-full">
-        <div class="intro-text">The words are fading...<br>Restore the original ink.</div>
+        <div class="intro-bleed">The words are fading... Restore the original ink.</div>
     </div>
 
-    <div id="screen-title" class="screen" style="display:none">
-        <h1 class="codex-logo">THE CODEX</h1>
-        <div class="menu-phi">
-            <div class="menu-main">
-                <button onclick="showScreen('screen-map')">THE JOURNEY (MAP)</button>
-                <button onclick="showScreen('screen-sidequest')">SIDE QUESTS</button>
+    <div id="screen-menu" class="screen" style="display:none">
+        <h1 class="ink-logo">THE CODEX</h1>
+        <div class="phi-menu">
+            <div class="primary-options">
+                <button class="btn-main" onclick="startChapter(1)">THE GATHERING (Chapter 1)</button>
+                <button class="btn-main locked">THE SILO (Locked)</button>
             </div>
-            <div class="menu-side">
-                <button onclick="showScreen('screen-prefs')">PREFS</button>
-                <button onclick="showScreen('screen-donate')">GIVE</button>
-                <button onclick="showScreen('screen-about')">ABOUT</button>
+            <div class="secondary-options">
+                <button onclick="showDonate()">GIVE</button>
+                <button onclick="showAbout()">ABOUT</button>
             </div>
         </div>
-    </div>
-
-    <div id="screen-map" class="screen" style="display:none">
-        <button class="btn-back" onclick="showScreen('screen-title')">← BACK</button>
-        <h2 class="section-title">THE 36 SCROLLS</h2>
-        <div id="chapter-grid"></div>
     </div>
 
     <div id="screen-game" class="screen" style="display:none">
-        <div class="game-phi-layout">
-            <div class="stage-primary">
-                <div id="greek-display" class="ink-massive"></div>
+        <div class="game-phi-grid">
+            <div class="main-stage">
+                <div id="word-vault">
+                    <div id="greek-main" class="ink-huge"></div>
+                    <div id="audio-seal" class="ghost-seal" onclick="playAudio()"></div>
+                </div>
                 <div id="interaction-grid"></div>
             </div>
-            <div class="stage-support">
-                <div id="char-sprite">🦖</div>
-                <div id="intel-bubble" class="phi-bubble"></div>
+            <div class="personnel-stage">
+                <div id="person-portrait"></div>
+                <div id="chat-bubble" class="ink-bubble"></div>
             </div>
-        </div>
-    </div>
-
-    <div id="screen-donate" class="screen" style="display:none">
-        <button class="btn-back" onclick="showScreen('screen-title')">← BACK</button>
-        <div class="card-phi">
-            <h2>SUPPORT THE ARCHIVE</h2>
-            <p>Every dollar funds the creation of the Greek, Hebrew, and Latin modules. Help us preserve the original skin of the Word.</p>
-            <div class="qr-vault">(( QR CODE ))</div>
         </div>
     </div>
 
