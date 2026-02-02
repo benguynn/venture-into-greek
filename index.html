@@ -8,12 +8,11 @@
 </head>
 <body>
     <div id="app-container">
-        <nav id="act-navigator" class="nav-hidden">
-            <button onclick="switchAct(1)">ACT I</button>
-            <button id="nav-act2" onclick="switchAct(2)">ACT II</button>
-            <button id="nav-act3" onclick="switchAct(3)">ACT III</button>
-            <button onclick="window.location.href='dossier.html'">DOSSIER</button>
-        </nav>
+        <div class="trackers">
+            <div class="track-row"><span>ACT</span><div class="bar"><div id="act-bar" class="fill"></div></div></div>
+            <div class="track-row"><span>CHAPTER</span><div class="bar"><div id="chap-bar" class="fill"></div></div></div>
+            <div class="track-row"><span>GAME</span><div class="bar"><div id="game-bar" class="fill"></div></div></div>
+        </div>
 
         <div id="screen-login" class="card">
             <h1 class="logo">SCRIPTORIUM</h1>
@@ -22,17 +21,31 @@
         </div>
 
         <div id="screen-game" class="card" style="display:none">
-            <div class="progress-section">
-                <div class="track-label"><span>CHAPTER 1 MASTERY</span><span id="chap-pct">0%</span></div>
-                <div class="master-bar"><div id="chap-fill" class="master-fill"></div></div>
+            <div id="character-stage">
+                <div id="char-icon">🦉</div>
+                <div id="chat-bubble" class="bubble">"Let's get your eyes adjusted, Recruit."</div>
             </div>
 
-            <div id="game-stage">
-                <div id="display-area" class="huge-static-greek"></div>
-                <div id="options-grid"></div>
+            <div id="display-container">
+                <div id="speaker-icon" onclick="speakCurrent()">🔊</div>
+                <div id="greek-display" class="huge-greek"></div>
             </div>
+
+            <div id="interaction-zone"></div>
             
-            <div id="intel-feed"></div>
+            <div id="nav-bar" class="hidden">
+                <button onclick="switchAct(1)">ACT I</button>
+                <button onclick="switchAct(2)">ACT II</button>
+                <button onclick="window.location.href='library.html'">LEXICON</button>
+            </div>
+        </div>
+
+        <div id="screen-donation" class="card" style="display:none">
+            <h2 class="gold-text">CHAPTER 1 SEALED</h2>
+            <p>You have reclaimed the first layer of the truth. This nonprofit is built on the belief that everyone should have access to these texts.</p>
+            <div id="qr-placeholder"><img src="qr_placeholder.png" style="width:150px;"></div>
+            <p class="small">Support ongoing operations in Greek, Hebrew, and Latin education.</p>
+            <button onclick="location.reload()">CONTINUE JOURNEY</button>
         </div>
     </div>
     <script src="script.js"></script>
