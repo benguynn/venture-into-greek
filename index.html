@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>THE CODEX</title>
+    
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-512.png">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,7 +18,7 @@
 
     <div id="screen-loader" class="overlay-full">
         <div class="loader-content">
-            <div class="quill-hand">✒️</div>
+            <div class="quill-icon">✒️</div>
             <p>Unsealing the Silo...</p>
         </div>
     </div>
@@ -24,6 +27,7 @@
         <div id="screen-intro" class="screen active">
             <div class="phi-box-support">
                 <h1 class="ink-logo">THE CODEX</h1>
+                <p class="ink-subtitle">Restore the original ink.</p>
             </div>
             <div class="phi-box-interaction">
                 <button class="btn-primary" onclick="initVault()">ENTER ARCHIVE</button>
@@ -31,7 +35,9 @@
         </div>
 
         <div id="screen-menu" class="screen">
-            <div class="phi-box-support"><h1 class="ink-logo-small">THE CODEX</h1></div>
+            <div class="phi-box-support">
+                <h1 class="ink-logo-small">THE CODEX</h1>
+            </div>
             <div class="phi-box-interaction">
                 <button onclick="showScreen('screen-map')">THE JOURNEY</button>
                 <button onclick="showScreen('screen-donate')">GIVE</button>
@@ -41,19 +47,41 @@
 
         <div id="screen-map" class="screen">
             <button class="btn-back" onclick="showScreen('screen-menu')">← MENU</button>
-            <div class="phi-box-support"><h2>THE 36 SCROLLS</h2></div>
-            <div id="chapter-grid" class="phi-box-interaction"></div>
+            <div class="phi-box-support">
+                <h2>THE 36 SCROLLS</h2>
+            </div>
+            <div class="phi-box-interaction">
+                <div id="chapter-grid"></div>
+            </div>
         </div>
 
         <div id="screen-game" class="screen">
             <div class="phi-box-support">
-                <div id="personnel-area">
+                <div id="personnel-sidebar">
                     <div id="char-icon"></div>
                     <div id="chat-bubble"></div>
                 </div>
                 <div id="ink-display"></div>
             </div>
-            <div id="interaction-braid" class="phi-box-interaction"></div>
+            <div class="phi-box-interaction">
+                <div id="interaction-braid"></div>
+            </div>
+        </div>
+
+        <div id="screen-summary" class="screen">
+            <div class="phi-box-support">
+                <h2 id="summary-header">ACT SEALED</h2>
+                <div class="ring-container">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" class="ring-track"></circle>
+                        <circle cx="50" cy="50" r="45" id="progress-ring" class="ring-fill"></circle>
+                    </svg>
+                    <div id="pct-label">0%</div>
+                </div>
+            </div>
+            <div class="phi-box-interaction">
+                <button class="btn-primary" onclick="showScreen('screen-map')">RETURN TO MAP</button>
+            </div>
         </div>
     </div>
 
@@ -61,5 +89,17 @@
     <audio id="snd-paper" src="paper-sounds-46696.mp3" preload="auto"></audio>
 
     <script src="script.js"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    console.log('Silo unsealed (SW Registered).');
+                }).catch(err => {
+                    console.error('Silo seal failed.', err);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
