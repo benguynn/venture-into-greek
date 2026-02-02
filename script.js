@@ -1,19 +1,16 @@
 localStorage.clear();
 
-const STATE = { act: 1, step: 0, total: 0, unlockedIntel: [] };
+const STATE = { act: 1, step: 0, total: 0, currentWord: "" };
 
-const ACT1 = [ // Recognition
-    { q: "θεός", a: "God", i: "The root of theology." },
-    { q: "λόγος", a: "Word", i: "The root of logic." },
-    { q: "ἀλήθεια", a: "Truth", i: "Reality uncovered." },
-    { q: "ν", a: "n", i: "Looks like 'v', sounds like 'n'." },
-    { q: "ρ", a: "r", i: "Looks like 'p', sounds like 'r'." }
+const ACT1_LESSONS = [
+    { type: 'observe', q: "Χριστός", a: "Χ", p: "Touch the letter that looks like an 'X'. It sounds like 'CH'." },
+    { type: 'match', q: "Χριστός", a: "Christ", p: "Now find the English match for 'Christos'." },
+    { type: 'observe', q: "ν", a: "n", p: "This is the 'nu'. It looks like a 'v', but sounds like 'n'ail." }
 ];
 
-const ACT2 = [ // Patterns (Builds on Act 1)
-    { q: "θεότης", a: "Deity", i: "Built on θεός (Act 1). This is the nature of God." },
-    { q: "λογικός", a: "Logical", i: "Built on λόγος (Act 1). The pattern of the Word." },
-    { q: "ἀληθινός", a: "True", i: "Built on ἀλήθεια (Act 1). The adjective form." }
+const ACT2_ROOTS = [
+    { q: "θεός", a: "God", p: "The root of Theology." },
+    { q: "θεότης", a: "Deity", p: "This is the nature of God (from Act 1)." }
 ];
 
 function unlock() {
@@ -25,61 +22,74 @@ function unlock() {
 }
 
 function render() {
-    const display = document.getElementById('display-area');
-    const grid = document.getElementById('options-grid');
+    const display = document.getElementById('greek-display');
+    const zone = document.getElementById('interaction-zone');
+    const bubble = document.getElementById('chat-bubble');
     
-    display.innerHTML = ''; grid.innerHTML = '';
-    let db = (STATE.act === 1) ? ACT1 : (STATE.act === 2) ? ACT2 : ACT1;
+    display.innerHTML = ''; zone.innerHTML = ''; display.className = "huge-greek";
+    
+    let db = (STATE.act === 1) ? ACT1_LESSONS : ACT2_ROOTS;
     let item = db[STATE.step % db.length];
-
+    STATE.currentWord = item.q;
+    
+    bubble.innerText = item.p;
     display.innerText = item.q;
 
-    // Fix: Clear and rebuild options
-    let pool = ["Life", "Faith", "Grace", "Spirit", "Earth"];
-    let choices = shuffle([item.a, ...pool.slice(0, 3)]);
+    // Start breathing if idle
+    let idleTimer = setTimeout(() => display.classList.add('breathing'), 5000);
 
-    choices.forEach(c => {
-        let b = document.createElement('button');
-        b.innerText = c;
-        b.onclick = () => handleAnswer(c === item.a, item.i);
-        grid.appendChild(b);
-    });
-
-    updateUI();
-}
-
-function handleAnswer(correct, intel) {
-    if(!correct) return; // Silent fail or minor red flash
-    
-    STATE.step++;
-    STATE.total++;
-    
-    // Save to Dossier
-    if(!STATE.unlockedIntel.includes(intel)) {
-        STATE.unlockedIntel.push(intel);
-        localStorage.setItem('dossier', JSON.stringify(STATE.unlockedIntel));
+    // Varied Interactivity
+    if(item.type === 'observe') {
+        item.q.split('').forEach(char => {
+            let b = document.createElement('button');
+            b.innerText = char;
+            b.onclick = () => { clearTimeout(idleTimer); check(char === item.a); };
+            zone.appendChild(b);
+        });
+    } else {
+        let choices = [item.a, "Life", "Grace"].sort(() => Math.random() - 0.5);
+        choices.forEach(c => {
+            let b = document.createElement('button');
+            b.innerText = c;
+            b.onclick = () => { clearTimeout(idleTimer); check(c === item.a); };
+            zone.appendChild(b);
+        });
     }
+    updateBars();
+}
 
-    document.getElementById('intel-feed').innerText = intel;
+function check(correct) {
+    if(!correct) return;
+    STATE.step++; STATE.total++;
     
-    if(STATE.step >= 12 && STATE.act === 1) {
-        document.getElementById('act-navigator').classList.remove('nav-hidden');
+    // FUNDRAISER ASK LOGIC
+    if(STATE.total === 12) triggerAsk(1);
+    if(STATE.total === 24) triggerAsk(2);
+
+    if(STATE.step >= 12 && STATE.act === 1) document.getElementById('nav-bar').classList.remove('hidden');
+    
+    setTimeout(render, 800);
+}
+
+function triggerAsk(num) {
+    const bubble = document.getElementById('chat-bubble');
+    if(num === 1) {
+        bubble.innerText = "You're getting it! Reclaiming the Word is a team effort. Check out how you can help us grow!";
+    } else if(num === 2) {
+        bubble.innerText = "Mastery is building! Consider a gift to help us preserve these texts for the next generation.";
     }
-
-    setTimeout(render, 1000);
 }
 
-function switchAct(num) {
-    STATE.act = num;
-    STATE.step = 0;
-    render();
+function speakCurrent() {
+    let msg = new SpeechSynthesisUtterance(STATE.currentWord);
+    msg.lang = 'el-GR';
+    window.speechSynthesis.speak(msg);
 }
 
-function updateUI() {
-    const fill = document.getElementById('chap-fill');
-    let pct = (STATE.total / 50) * 100;
-    fill.style.width = Math.min(pct, 100) + "%";
-    document.getElementById('chap-pct').innerText = Math.round(pct) + "%";
+function updateBars() {
+    document.getElementById('act-bar').style.width = (STATE.step / 15) * 100 + "%";
+    document.getElementById('chap-bar').style.width = (STATE.total / 48) * 100 + "%";
+    document.getElementById('game-bar').style.width = "2%";
 }
 
-function shuffle(a) { return a.sort(() => Math.random() - 0.5); }
+function switchAct(num) { STATE.act = num; STATE.step = 0; render(); }
