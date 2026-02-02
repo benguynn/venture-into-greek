@@ -3,46 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Scriptorium</title>
+    <title>SCRIPTORIUM</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app-container">
+        <div id="modal-overlay" class="modal-hide">
+            <div class="modal-card">
+                <h3 id="modal-title"></h3>
+                <p id="modal-body"></p>
+                <div class="modal-btns">
+                    <button id="modal-primary" class="btn-gold"></button>
+                    <button id="modal-secondary"></button>
+                </div>
+            </div>
+        </div>
+
         <div id="screen-login" class="card">
             <h1 class="logo">SCRIPTORIUM</h1>
-            <p class="tagline">PHASE I: THE AWAKENING</p>
-            <input type="password" id="pass-input" placeholder="Enter Codex Key">
+            <div class="character-box"><img src="scribe-icon.png" alt="" id="char-login"></div>
+            <input type="password" id="pass-input" placeholder="CODEX KEY">
             <button onclick="unlock()">UNSEAL ARCHIVES</button>
         </div>
 
         <div id="screen-game" class="card" style="display:none">
             <div class="trackers">
-                <div class="track-item"><span>CURRENT ACT</span><span id="act-pct">0%</span></div>
+                <div class="track-item"><span>ACT</span><span id="act-pct">0%</span></div>
                 <div class="bar-bg"><div id="act-fill" class="bar-fill"></div></div>
                 <div class="track-item"><span>CHAPTER 1</span><span id="chap-pct">0%</span></div>
                 <div class="bar-bg"><div id="chap-fill" class="bar-fill"></div></div>
-                <div class="track-item"><span>CAMPAIGN</span><span id="camp-pct">0%</span></div>
-                <div class="bar-bg"><div id="camp-fill" class="bar-fill"></div></div>
             </div>
 
-            <div id="status-update" class="status-msg">SCANNING MANUSCRIPT...</div>
-
-            <div id="game-content">
-                <div id="instruction-text"></div>
-                <div id="display-area"></div>
-                <div id="options-area"></div>
+            <div id="game-stage">
+                <div id="character-comment" class="bubble">"Slow is smooth, smooth is fast."</div>
+                <div id="display-area" class="huge-greek"></div>
+                <div id="interaction-zone"></div>
             </div>
 
-            <div id="dossier-scroll" class="dossier">
-                <h4 class="dossier-title">📂 INTELLIGENCE DOSSIER</h4>
-                <div id="dossier-content"></div>
-            </div>
-        </div>
-
-        <div id="screen-success" class="card" style="display:none">
-            <h2 class="gold-text">CHAPTER SEALED</h2>
-            <div id="leaderboard" class="leaderboard"></div>
-            <button onclick="location.reload()">RE-INITIALIZE TRAINING</button>
+            <div id="intel-toast" class="toast"></div>
         </div>
     </div>
     <script src="script.js"></script>
